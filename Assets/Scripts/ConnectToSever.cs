@@ -6,6 +6,7 @@ using Photon.Pun;
 public class ConnectToSever : MonoBehaviourPunCallbacks
 {
     // Start is called before the first frame update
+    public LevelLoader level;
     void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
@@ -18,6 +19,6 @@ public class ConnectToSever : MonoBehaviourPunCallbacks
     
     public override void OnJoinedLobby()
     {
-        
+        level.LoadNextLevel(2);
     }
 }

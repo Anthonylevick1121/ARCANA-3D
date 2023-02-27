@@ -666,6 +666,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 887160334640736697, guid: 470baccb2c33a2a4c8bf88bba3e638b2, type: 3}
   m_PrefabInstance: {fileID: 887160335464009088}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1396040762 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 770143664282241649, guid: 470baccb2c33a2a4c8bf88bba3e638b2, type: 3}
+  m_PrefabInstance: {fileID: 887160335464009088}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c9006826ae5d29449b8120f0d175d77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1888552950
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,6 +689,7 @@ GameObject:
   - component: {fileID: 1888552953}
   - component: {fileID: 1888552952}
   - component: {fileID: 1888552955}
+  - component: {fileID: 1888552956}
   - component: {fileID: 1888552954}
   m_Layer: 5
   m_Name: QuitButton
@@ -807,7 +819,32 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1888552952}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1888552956}
+        m_TargetAssemblyTypeName: ButtonLogic, Assembly-CSharp
+        m_MethodName: LeaveButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1888552956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888552950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f10a3dded775e4ea9d0729183c2b16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: {fileID: 0}
 --- !u!1 &2027648041
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,6 +857,7 @@ GameObject:
   - component: {fileID: 2027648044}
   - component: {fileID: 2027648043}
   - component: {fileID: 2027648046}
+  - component: {fileID: 2027648047}
   - component: {fileID: 2027648045}
   m_Layer: 5
   m_Name: StartButton
@@ -949,7 +987,32 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2027648043}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2027648047}
+        m_TargetAssemblyTypeName: ButtonLogic, Assembly-CSharp
+        m_MethodName: StartButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2027648047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027648041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f10a3dded775e4ea9d0729183c2b16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: {fileID: 1396040762}
 --- !u!1001 &887160335464009088
 PrefabInstance:
   m_ObjectHideFlags: 0
