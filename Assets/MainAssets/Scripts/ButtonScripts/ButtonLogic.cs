@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class ButtonLogic : MonoBehaviour
 {
@@ -21,5 +22,13 @@ public class ButtonLogic : MonoBehaviour
     {
         Debug.Log("Check");
         Application.Quit();
+    }
+
+    public void JoinButtonClick()
+    {
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2)
+        {
+            PhotonNetwork.LoadLevel("Game");
+        }
     }
 }

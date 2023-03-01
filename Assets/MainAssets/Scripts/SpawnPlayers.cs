@@ -14,6 +14,8 @@ public class SpawnPlayers : MonoBehaviour
     private void Start()
     {
         Vector2 spawnPosition = new Vector2(spawnX, spawnY);
-        PhotonNetwork.Instantiate(playerPrefab.name, spawnPosition, Quaternion.identity);
+        GameObject localPlayer = (GameObject)PhotonNetwork.Instantiate(playerPrefab.name,
+            spawnPosition, Quaternion.identity);
+        localPlayer.transform.Find("Main Camera").gameObject.SetActive(true);
     }
 }
