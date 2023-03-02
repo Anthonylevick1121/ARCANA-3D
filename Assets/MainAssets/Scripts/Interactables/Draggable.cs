@@ -6,20 +6,28 @@ using UnityEngine;
 public class Draggable : MonoBehaviour
 {
     // Start is called before the first frame update
-     Vector3 mousePosition;
+     private Vector3 mousePosition;
+     private Camera mainCamera;
+
+     private void Start()
+     {
+         mainCamera = Camera.main;
+     }
 
      private Vector3 GetMousePos()
      {
-         return Camera.main.WorldToScreenPoint(transform.position);
+         return mainCamera.WorldToScreenPoint(transform.position);
      }
 
+     // collider event function
      private void OnMouseDown()
      {
          mousePosition = Input.mousePosition - GetMousePos();
      }
 
+     // collider event function
      private void OnMouseDrag()
      {
-         transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition - mousePosition);
+         transform.position = mainCamera.ScreenToWorldPoint(Input.mousePosition - mousePosition);
      }
 }

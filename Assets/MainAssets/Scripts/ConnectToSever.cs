@@ -20,6 +20,6 @@ public class ConnectToSever : MonoBehaviourPunCallbacks
     
     public override void OnJoinedLobby()
     {
-        level.LoadNextLevel(2);
+        level.LoadNextLevel(2); // CreateAndJoin
     }
 }
