@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -8,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController controller;
     private PlayerCore player;
+    private PhotonView view; 
     
     private bool isGrounded;
     private bool crouching;
@@ -27,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         player = GetComponent<PlayerCore>();
+        //added this component for the if statement
+        view = GetComponent<PhotonView>();
         
         player.InputActions.Jump.performed += ctx => Jump();
         player.InputActions.Crouch.performed += ctx => Crouch();
@@ -37,48 +41,53 @@ public class PlayerMovement : MonoBehaviour
     {
         // handle continuous movement
         
-        Vector2 input = player.InputActions.Movement.ReadValue<Vector2>();
-        Vector3 movement = moveSpeed * transform.TransformDirection(input.x, 0, input.y);
-        
-        // consistently add downward acceleration
-        currentFallSpeed += gravity * Time.fixedDeltaTime;
-        
-        if (isGrounded && currentFallSpeed < 0)
+        //3-2-23 added an ifStatement to wrap the function in 
+        if (view.IsMine)
         {
-            currentFallSpeed = -2f; // the -2 helps ensure the character collider stays touching the ground.
-        }
+            Vector2 input = player.InputActions.Movement.ReadValue<Vector2>();
+            Vector3 movement = moveSpeed * transform.TransformDirection(input.x, 0, input.y);
         
-        movement.y = currentFallSpeed;
-        movement *= Time.fixedDeltaTime;
-        Vector3 pos = transform.position;
-        /*CollisionFlags flags = */controller.Move(movement);
-        Vector3 delta = transform.position - pos;
-        if (currentFallSpeed > 0 && delta.y < movement.y / 2/*(flags & CollisionFlags.CollidedAbove) > 0*/)
-        {
-            // we moved less than we should: airborne collision, reflect upward momentum but a little slower.
-            // The reason I'm doing the above condition instead of checking the flags is because sometimes an upward
-            // collision still allows the character to shove around it and move up anyways. This code will allow for
-            // that flexibility while still ensuring you don't stick to the roof.
-            currentFallSpeed = -currentFallSpeed / 2;
-        }
+            // consistently add downward acceleration
+            currentFallSpeed += gravity * Time.fixedDeltaTime;
         
-        // cached grounded var
-        isGrounded = controller.isGrounded;
-        
-        // handle crouching
-        if (lerpCrouch)
-        {
-            crouchTimer += Time.fixedDeltaTime;
-            
-            float p = crouchTimer * crouchTimer;
-            controller.height = Mathf.Lerp(controller.height, crouching ? 1 : 2, p);
-            
-            if (p >= 1)
+            if (isGrounded && currentFallSpeed < 0)
             {
-                lerpCrouch = false;
-                crouchTimer = 0f;
+                currentFallSpeed = -2f; // the -2 helps ensure the character collider stays touching the ground.
+            }
+        
+            movement.y = currentFallSpeed;
+            movement *= Time.fixedDeltaTime;
+            Vector3 pos = transform.position;
+            /*CollisionFlags flags = */controller.Move(movement);
+            Vector3 delta = transform.position - pos;
+            if (currentFallSpeed > 0 && delta.y < movement.y / 2/*(flags & CollisionFlags.CollidedAbove) > 0*/)
+            {
+                // we moved less than we should: airborne collision, reflect upward momentum but a little slower.
+                // The reason I'm doing the above condition instead of checking the flags is because sometimes an upward
+                // collision still allows the character to shove around it and move up anyways. This code will allow for
+                // that flexibility while still ensuring you don't stick to the roof.
+                currentFallSpeed = -currentFallSpeed / 2;
+            }
+        
+            // cached grounded var
+            isGrounded = controller.isGrounded;
+        
+            // handle crouching
+            if (lerpCrouch)
+            {
+                crouchTimer += Time.fixedDeltaTime;
+            
+                float p = crouchTimer * crouchTimer;
+                controller.height = Mathf.Lerp(controller.height, crouching ? 1 : 2, p);
+            
+                if (p >= 1)
+                {
+                    lerpCrouch = false;
+                    crouchTimer = 0f;
+                }
             }
         }
+        
     }
     
     public void Crouch()
