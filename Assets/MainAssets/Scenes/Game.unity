@@ -1018,6 +1018,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 4994116650750333499, guid: cd7b05491756abe4c9d775c7f70f0984, type: 3}
   spawnX: 0
   spawnY: 0
+  promptUi: {fileID: 886367570}
 --- !u!4 &1293915163
 Transform:
   m_ObjectHideFlags: 0
@@ -1145,6 +1146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   promptMessage: Touch cube
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1451971768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1157,6 +1161,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f34c5084a7173f840bfd094757c91d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  promptMessage: 
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1695002679
 GameObject:
   m_ObjectHideFlags: 0

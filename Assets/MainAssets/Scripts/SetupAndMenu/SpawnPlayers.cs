@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Photon.Pun;
+using TMPro;
+using UnityEngine;
 
 public class SpawnPlayers : MonoBehaviour
 {
@@ -11,11 +10,15 @@ public class SpawnPlayers : MonoBehaviour
     public float spawnX;
     public float spawnY;
 
+    [SerializeField]
+    private TextMeshProUGUI promptUi;
+
     private void Start()
     {
         Vector2 spawnPosition = new Vector2(spawnX, spawnY);
         GameObject localPlayer = (GameObject)PhotonNetwork.Instantiate(playerPrefab.name,
             spawnPosition, Quaternion.identity);
+        localPlayer.GetComponent<PlayerUI>().promptText = promptUi;
         localPlayer.transform.Find("Main Camera").gameObject.SetActive(true);
     }
 }

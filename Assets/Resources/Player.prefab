@@ -219,7 +219,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 2878121803256225926}
-  xRotation: 0
   xSensitivity: 30
   ySensitivity: 30
 --- !u!114 &4936710846033733689
@@ -263,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b71603c911d945468e6eb7be5677b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  moveSpeed: 5
   jumpHeight: 0.6
 --- !u!114 &4686265772904354019
 MonoBehaviour:

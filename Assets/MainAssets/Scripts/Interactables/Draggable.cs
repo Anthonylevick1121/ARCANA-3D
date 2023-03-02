@@ -1,30 +1,27 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Draggable : MonoBehaviour
+public class Draggable : Interactable
 {
     // Start is called before the first frame update
      private Vector3 mousePosition;
      private Camera mainCamera;
-
+    
      private void Start()
      {
          mainCamera = Camera.main;
      }
-
+    
      private Vector3 GetMousePos()
      {
          return mainCamera.WorldToScreenPoint(transform.position);
      }
-
+    
      // collider event function
      private void OnMouseDown()
      {
          mousePosition = Input.mousePosition - GetMousePos();
      }
-
+    
      // collider event function
      private void OnMouseDrag()
      {

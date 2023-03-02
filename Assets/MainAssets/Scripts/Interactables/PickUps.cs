@@ -1,21 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PickUps : Interactable
 {
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         
     }
-
+    
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }
-
+    
     protected override void Interact()
     {
         Vector3 mousePosition = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);

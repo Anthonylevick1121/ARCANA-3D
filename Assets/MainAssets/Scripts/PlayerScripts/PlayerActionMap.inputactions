@@ -1,5 +1,5 @@
 {
-    "name": "PlayerInput",
+    "name": "PlayerActionMap",
     "maps": [
         {
             "name": "playerActions",
@@ -34,21 +34,21 @@
                 },
                 {
                     "name": "Look",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "ffde3e2d-7942-420b-835e-67576bb6f26f",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Sprint",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "3c02ac8b-4a9a-423f-853a-e4cc56124744",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Crouch",

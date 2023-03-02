@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class DemoPlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
     public float baseSpeed = 12f;

@@ -822,7 +822,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1888552956}
         m_TargetAssemblyTypeName: ButtonLogic, Assembly-CSharp
-        m_MethodName: LeaveButtonClick
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
