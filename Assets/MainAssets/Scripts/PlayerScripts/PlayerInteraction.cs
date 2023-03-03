@@ -35,11 +35,19 @@ public class PlayerInteraction : MonoBehaviour
         RaycastHit hitInfo;
         if (!Physics.Raycast(ray, out hitInfo, distance)) return;
         
-        Interactable interactable = hitInfo.collider.GetComponentInParent<Interactable>();
+        Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
         if (!interactable) return;
         
         currentInteractable = interactable;
-        ui.UpdateText(interactable.GetPrompt());
+        if (currentInteractable)
+        {
+            if (interactable.GetPrompt() != null)
+            {
+                ui.UpdateText(interactable.GetPrompt());
+            }
+            
+        }
+       
     }
     
     private void TryInteract()

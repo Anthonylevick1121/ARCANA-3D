@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Handles the game UI and any on-screen popups that the player may see.
@@ -15,7 +16,7 @@ public class PlayerUI : MonoBehaviour
     
     private void Start()
     {
-        promptText.text = "";
+        promptText.text = "check";
     }
     
     // Update is called once per frame
@@ -23,4 +24,5 @@ public class PlayerUI : MonoBehaviour
     {
         promptText.text = promptMessage;
     }
+    
 }

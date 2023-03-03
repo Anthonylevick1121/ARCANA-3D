@@ -10,15 +10,14 @@ public class SpawnPlayers : MonoBehaviour
     public float spawnX;
     public float spawnY;
 
-    [SerializeField]
-    private TextMeshProUGUI promptUi;
+//removed this field since it wasn't needed
 
     private void Start()
     {
         Vector2 spawnPosition = new Vector2(spawnX, spawnY);
         GameObject localPlayer = (GameObject)PhotonNetwork.Instantiate(playerPrefab.name,
             spawnPosition, Quaternion.identity);
-        localPlayer.GetComponent<PlayerUI>().promptText = promptUi;
+    
         localPlayer.transform.Find("Main Camera").gameObject.SetActive(true);
     }
 }

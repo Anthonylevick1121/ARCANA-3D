@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Draggable : Interactable
 {
@@ -9,6 +10,7 @@ public class Draggable : Interactable
      private void Start()
      {
          mainCamera = Camera.main;
+         
      }
     
      private Vector3 GetMousePos()
@@ -26,5 +28,6 @@ public class Draggable : Interactable
      private void OnMouseDrag()
      {
          transform.position = mainCamera.ScreenToWorldPoint(Input.mousePosition - mousePosition);
+         
      }
 }

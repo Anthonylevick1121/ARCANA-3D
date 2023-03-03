@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8387812288188124780}
   - component: {fileID: 8387812288187157676}
   - component: {fileID: 8387812288189420139}
+  - component: {fileID: 1814634204818798983}
+  - component: {fileID: 6493578232366204729}
   m_Layer: 0
   m_Name: Skull
   m_TagString: Untagged
@@ -98,3 +100,35 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: 34636936646bab64fb61023e7f3410ba, type: 3}
+--- !u!114 &1814634204818798983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8387812288189420140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34c5084a7173f840bfd094757c91d75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptMessage: check Skull
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &6493578232366204729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8387812288189420140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4861ba0d17019074eaffbd46937e8ce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptMessage: 
+  onInteract:
+    m_PersistentCalls:
+      m_Calls: []
