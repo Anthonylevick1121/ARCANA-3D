@@ -5,7 +5,7 @@ public abstract class Interactable : MonoBehaviour
 {
     [SerializeField]
     private string promptMessage;
-
+    
     protected virtual void Start()
     {
         gameObject.layer = LayerMask.NameToLayer("Interactable");
@@ -15,5 +15,5 @@ public abstract class Interactable : MonoBehaviour
     
     protected abstract void Interact(PlayerCore player, [CanBeNull] HoldableItem heldItem);
     
-    public string GetPrompt() => promptMessage;
+    public virtual string GetPrompt() => promptMessage;
 }

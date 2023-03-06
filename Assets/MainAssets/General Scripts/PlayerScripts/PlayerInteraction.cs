@@ -19,11 +19,12 @@ public class PlayerInteraction : MonoBehaviour
     {
         player = GetComponent<PlayerCore>();
         player.InputActions.Interact.performed += ctx => TryInteract();
+        player.InputActions.DropItem.performed += ctx => DropItem();
         
         // default behavior should be to cast against everything except ignore raycast (hence the ~)
         // mask = ~LayerMask.GetMask("Ignore Raycast");
     }
-
+    
     // Update is called once per frame
     private void Update() {
         player.ui.UpdateText(string.Empty);
@@ -33,7 +34,7 @@ public class PlayerInteraction : MonoBehaviour
         RaycastHit hitInfo;
         if (!Physics.Raycast(ray, out hitInfo, distance, interactMask)) return;
         
-        Interactable interactable = hitInfo.collider.GetComponent<Interactable>();
+        Interactable interactable = hitInfo.collider.GetComponentInParent<Interactable>();
         if (!interactable) return;
         
         hoveredInteractable = interactable;

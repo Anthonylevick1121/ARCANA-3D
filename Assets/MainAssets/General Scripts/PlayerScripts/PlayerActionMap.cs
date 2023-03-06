@@ -55,6 +55,15 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""DropItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""eaedd52a-14c6-45eb-828d-659628bb7f99"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Look"",
                     ""type"": ""PassThrough"",
                     ""id"": ""ffde3e2d-7942-420b-835e-67576bb6f26f"",
@@ -302,6 +311,17 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c33f2678-f462-45ef-9008-6ba4110a5c4f"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -313,6 +333,7 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
         m_playerActions_Movement = m_playerActions.FindAction("Movement", throwIfNotFound: true);
         m_playerActions_Jump = m_playerActions.FindAction("Jump", throwIfNotFound: true);
         m_playerActions_Interact = m_playerActions.FindAction("Interact", throwIfNotFound: true);
+        m_playerActions_DropItem = m_playerActions.FindAction("DropItem", throwIfNotFound: true);
         m_playerActions_Look = m_playerActions.FindAction("Look", throwIfNotFound: true);
         m_playerActions_Sprint = m_playerActions.FindAction("Sprint", throwIfNotFound: true);
         m_playerActions_Crouch = m_playerActions.FindAction("Crouch", throwIfNotFound: true);
@@ -380,6 +401,7 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_playerActions_Movement;
     private readonly InputAction m_playerActions_Jump;
     private readonly InputAction m_playerActions_Interact;
+    private readonly InputAction m_playerActions_DropItem;
     private readonly InputAction m_playerActions_Look;
     private readonly InputAction m_playerActions_Sprint;
     private readonly InputAction m_playerActions_Crouch;
@@ -390,6 +412,7 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_playerActions_Movement;
         public InputAction @Jump => m_Wrapper.m_playerActions_Jump;
         public InputAction @Interact => m_Wrapper.m_playerActions_Interact;
+        public InputAction @DropItem => m_Wrapper.m_playerActions_DropItem;
         public InputAction @Look => m_Wrapper.m_playerActions_Look;
         public InputAction @Sprint => m_Wrapper.m_playerActions_Sprint;
         public InputAction @Crouch => m_Wrapper.m_playerActions_Crouch;
@@ -411,6 +434,9 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @DropItem.started += instance.OnDropItem;
+            @DropItem.performed += instance.OnDropItem;
+            @DropItem.canceled += instance.OnDropItem;
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
@@ -433,6 +459,9 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @DropItem.started -= instance.OnDropItem;
+            @DropItem.performed -= instance.OnDropItem;
+            @DropItem.canceled -= instance.OnDropItem;
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
@@ -464,6 +493,7 @@ public partial class @PlayerActionMap: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnDropItem(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
