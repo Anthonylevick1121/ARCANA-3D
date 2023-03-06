@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Object = UnityEngine.Object;
@@ -13,16 +12,19 @@ public struct PotionPuzzleCategory
     // prefabs: the available bottle types, will be referenced by index
     // location parent: the children of this game object will be used to define the possible spawn locations.
     // [SerializeField] private GameObject template;
-    [SerializeField] private GameObject[] prefabs;
-    [SerializeField] private GameObject locationParent;
+    [SerializeField] private PotionPuzzleObject[] prefabs;
+    [SerializeField] private Transform locationParent;
     [SerializeField] private GameObject specialEffect; // particle effect to apply to one object.
     
     // the cached start locations of each object during this instance of the game
     private Transform[] startLocations;
     private int specialEffectIndex;
     
+    private string name;
+    
     public void ValidatePrefabs(int targetCount, string name)
     {
+        this.name = name;
         Assert.IsTrue(prefabs.Length == targetCount,
             "list of "+name+" prefabs must be size "+targetCount);
     }
@@ -31,12 +33,15 @@ public struct PotionPuzzleCategory
     {
         this.specialEffectIndex = specialEffectIndex; // save it
         // construct location array
-        List<Transform> startLocationList = new (locationParent.GetComponentsInChildren<Transform>());
+        List<int> startLocationList = new ();
+        int numChildren = locationParent.childCount;
+        for (int i = 0; i < numChildren; i++) startLocationList.Add(i);
+        // randomize
         startLocations = new Transform[startLocationList.Count];
         for (int i = 0; i < startLocations.Length; i++)
         {
             int idx = Random.Range(0, startLocationList.Count);
-            startLocations[i] = startLocationList[idx];
+            startLocations[i] = locationParent.GetChild(startLocationList[idx]);
             startLocationList.RemoveAt(idx);
         }
         
@@ -45,25 +50,13 @@ public struct PotionPuzzleCategory
         for (int i = 0; i < prefabs.Length; i++)
         {
             SpawnObject(i);
-            // copy anything from the template
-            // ONLY COPIES TYPES
-            // foreach (Component c in template.GetComponents<Component>())
-            // {
-            // if (c is Transform) continue;
-            // obj.AddComponent(c.GetType());
-            // c.CloneViaSerialization()
-            // }
-            
-            // activeObjects[i] = obj;
         }
     }
     
     private void SpawnObject(int id)
     {
-        GameObject obj = Object.Instantiate(prefabs[id], startLocations[id].position, startLocations[id].rotation);
-        PotionPuzzleObject potionObj = obj.GetComponent<PotionPuzzleObject>();
-        if (potionObj)
-            potionObj.Id = id;
+        PotionPuzzleObject obj = Object.Instantiate(prefabs[id], startLocations[id].position, startLocations[id].rotation);
+        obj.Id = id;
         if (id == specialEffectIndex)
             Object.Instantiate(specialEffect, obj.transform); // add the special effect
     }

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PotionPuzzleObject : HoldableItem
 {
-    public int Id { get; set; }
+    public int Id;
 }
