@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class ButtonLogic : MonoBehaviour
+public class ButtonLogic : MonoBehaviourPun
 {
     public LevelLoader level;
     // Start is called before the first frame update
@@ -26,7 +26,13 @@ public class ButtonLogic : MonoBehaviour
     {
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2)
         {
-            PhotonNetwork.LoadLevel("Game");
+            photonView.RPC("SeparatePlayers", RpcTarget.All);
         }
+    }
+
+    [PunRPC]
+    public void SeparatePlayers()
+    {
+        level.LoadNextLevel(PhotonNetwork.IsMasterClient ? 6 : 5);
     }
 }

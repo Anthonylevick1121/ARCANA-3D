@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MainAssets/Scenes/Game.unity
     guid: 1ed336d186f97f646803f6e31c099d80
+  - enabled: 1
+    path: Assets/MainAssets/Scenes/Library.unity
+    guid: 8898d59f5e7180545936fe05169a9c6e
+  - enabled: 1
+    path: Assets/MainAssets/Scenes/PotionPuzzleScene.unity
+    guid: 24226e73ce98889489f8f92fbd81b71e
   m_configObjects: {}

@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController controller;
     private PlayerCore player;
-    private PhotonView view; 
+    //private PhotonView view; 
     
     private bool isGrounded;
     private bool crouching;
@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
         player = GetComponent<PlayerCore>();
         //added this component for the if statement
-        view = GetComponent<PhotonView>();
+        //view = GetComponent<PhotonView>();
         
         player.InputActions.Jump.performed += ctx => Jump();
         player.InputActions.Crouch.performed += ctx => Crouch();
@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         // handle continuous movement
         
         //3-2-23 added an ifStatement to wrap the function in 
-        if (view.IsMine)
+        //if (view.IsMine)
         {
             Vector2 input = player.InputActions.Movement.ReadValue<Vector2>();
             Vector3 movement = moveSpeed * transform.TransformDirection(input.x, 0, input.y);

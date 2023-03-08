@@ -9,7 +9,7 @@ public class ConnectToSever : MonoBehaviourPunCallbacks
     public LevelLoader level;
     void Start()
     {
-        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.AutomaticallySyncScene = false;
         PhotonNetwork.ConnectUsingSettings();
     }
 

@@ -10,7 +10,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private float xSensitivity = 10.0f;
     [SerializeField] private float ySensitivity = 10.0f;
     private float xRotation;
-    private PhotonView view;
+    //private PhotonView view;
 
     private InputAction lookAction;
     private bool delayInput;
@@ -18,7 +18,7 @@ public class PlayerCamera : MonoBehaviour
     private void Start()
     {
         //added a component for photonView
-        view = GetComponent<PhotonView>();
+        //view = GetComponent<PhotonView>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         xRotation = camera.transform.localRotation.x;
@@ -32,7 +32,7 @@ public class PlayerCamera : MonoBehaviour
     private void Update()
     {
         //3-2-23 added an if statement for view.IsMine
-        if (view.IsMine)
+        //if (view.IsMine)
         {
             Vector2 input = lookAction.ReadValue<Vector2>();
             if (input == Vector2.zero) return;

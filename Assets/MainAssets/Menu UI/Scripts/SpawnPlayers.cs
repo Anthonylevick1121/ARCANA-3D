@@ -6,15 +6,15 @@ public class SpawnPlayers : MonoBehaviour
 {
     public GameObject playerPrefab;
     
-    //TODO: change coords to explorer/librarian rooms respectively
     public float spawnX;
     public float spawnY;
+    public float spawnZ;
 
 //removed this field since it wasn't needed
 
     private void Start()
     {
-        Vector2 spawnPosition = new Vector2(spawnX, spawnY);
+        Vector3 spawnPosition = new Vector3(spawnX, spawnY, spawnZ);
         GameObject localPlayer = (GameObject)PhotonNetwork.Instantiate(playerPrefab.name,
             spawnPosition, Quaternion.identity);
     
