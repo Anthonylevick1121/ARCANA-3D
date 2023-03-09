@@ -44,4 +44,10 @@ public class LibraryStateController : MonoBehaviourPunCallbacks
         if(PhotonPacket.POTION_WIN.GetOr(propertiesThatChanged, false))
             statusText.SetStatus("Potion Puzzle Solved!");
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+            debugText.gameObject.SetActive(!debugText.gameObject.activeSelf);
+    }
 }

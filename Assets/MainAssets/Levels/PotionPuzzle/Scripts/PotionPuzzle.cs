@@ -17,7 +17,6 @@ public class PotionPuzzle : MonoBehaviour
     [SerializeField] private PotionPuzzleCategory bottles;
     [SerializeField] private PotionPuzzleCategory ingredients;
     [SerializeField] private PotionPuzzleCategory symbols;
-    // TODO should the symbol colors be randomized too? Forces players to describe the symbol.
     
     [SerializeField] private Material[] symbolColors;
     
@@ -140,6 +139,8 @@ public class PotionPuzzle : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
             debugText.text = solutionText;
+        if (Input.GetKeyDown(KeyCode.L))
+            debugText.gameObject.SetActive(!debugText.gameObject.activeSelf);
     }
     
     public bool AddIngredient(PotionIngredient ing)
