@@ -4,5 +4,12 @@ using UnityEngine;
 
 public class PotionBottle : PotionPuzzleObject
 {
-    public override string GetPrompt() => "Pick up " + PotionPuzzle.BOTTLE_NAMES[Id] + " Bottle";
+    protected override void Start()
+    {
+        base.Start();
+        gameObject.tag = "Bottle";
+    }
+    
+    // public override string GetPrompt() => "Pick up " + PotionPuzzle.BOTTLE_NAMES[Id] + " Bottle";
+    public override string GetPrompt() => "Pick up Bottle";
 }

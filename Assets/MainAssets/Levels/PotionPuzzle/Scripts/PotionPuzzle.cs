@@ -141,6 +141,14 @@ public class PotionPuzzle : MonoBehaviour
             debugText.text = solutionText;
         if (Input.GetKeyDown(KeyCode.L))
             debugText.gameObject.SetActive(!debugText.gameObject.activeSelf);
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            GameObject.FindWithTag("Player").GetComponent<PlayerCore>().interaction.DropItem();
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Ingredient"))
+                ingredients.ReplaceConsumable(obj.GetComponent<PotionIngredient>());
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Bottle"))
+                bottles.ReplaceConsumable(obj.GetComponent<PotionBottle>());
+        }
     }
     
     public bool AddIngredient(PotionIngredient ing)
