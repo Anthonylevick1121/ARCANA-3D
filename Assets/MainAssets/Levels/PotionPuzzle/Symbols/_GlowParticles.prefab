@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6721173685710825089}
   - component: {fileID: 2771281197126128799}
   m_Layer: 0
-  m_Name: Particle System
+  m_Name: _GlowParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8125584884973061254}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -19.914, y: 3.48, z: -3.438}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.010727832, y: 0.010727832, z: 0.010727832}
   m_ConstrainProportionsScale: 0
   m_Children: []

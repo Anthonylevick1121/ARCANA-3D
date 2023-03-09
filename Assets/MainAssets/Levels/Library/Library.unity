@@ -2076,6 +2076,7 @@ MonoBehaviour:
   - {fileID: 1549959030}
   - {fileID: 903332087}
   - {fileID: 1174797869}
+  solutionEffect: {fileID: 8125584884973061254, guid: dafc39737dea3864aa8aa0ccf5e662b3, type: 3}
   solutionSymbolMat: {fileID: 2100000, guid: 1b208d4d0bca64a438f7a3a3a533a0de, type: 2}
   notSolutionSymbolMat: {fileID: 2100000, guid: e47363f0054e982419484ed124d22146, type: 2}
 --- !u!4 &490434019 stripped

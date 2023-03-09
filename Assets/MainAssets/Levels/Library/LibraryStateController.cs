@@ -13,6 +13,7 @@ public class LibraryStateController : MonoBehaviourPunCallbacks
     [SerializeField] private StatusTextListener statusText;
     [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private GameObject[] symbols;
+    [SerializeField] private GameObject solutionEffect;
     [SerializeField] private Material solutionSymbolMat;
     [SerializeField] private Material notSolutionSymbolMat;
     
@@ -30,8 +31,12 @@ public class LibraryStateController : MonoBehaviourPunCallbacks
         
         // assign materials
         for (int i = 0; i < symbols.Length; i++)
+        {
             symbols[i].GetComponentInChildren<MeshRenderer>().material =
                 i == solutionSymbol ? solutionSymbolMat : notSolutionSymbolMat;
+            if (i == solutionSymbol)
+                Instantiate(solutionEffect, symbols[i].transform);
+        }
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
