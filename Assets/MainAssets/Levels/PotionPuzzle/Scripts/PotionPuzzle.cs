@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 public class PotionPuzzle : MonoBehaviour
@@ -17,7 +18,9 @@ public class PotionPuzzle : MonoBehaviour
     [SerializeField] private PotionPuzzleCategory ingredients;
     [SerializeField] private PotionPuzzleCategory symbols;
     // TODO should the symbol colors be randomized too? Forces players to describe the symbol.
-
+    
+    [SerializeField] private Material[] symbolColors;
+    
     // STATIC DATA
     // these don't actually affect the game ASIDE from length checks which error if a different number of prefabs are given.
     public static readonly string[] BOTTLE_NAMES = { "Cone", "Cube", "Cylinder", "Sphere", "Inverted" };
@@ -60,8 +63,10 @@ public class PotionPuzzle : MonoBehaviour
     private int correctBottle; // get from solution
     private int[] correctIngredients; // parse from solution
     // these just create an effect, they aren't technically needed for the solution
+    private int correctColor; // get from solution
     private int correctSymbol; // there are two symbols per color; this is just the full symbol tho
     private int correctToxic; // get from solution
+    private int[] symbolColorIds; // symbol -> color idx, there will be 2 symbols per color
     
     // runtime, player-driven action data
     private readonly List<int> placedIngredients = new ();
@@ -76,30 +81,48 @@ public class PotionPuzzle : MonoBehaviour
         // validate prefab lists
         bottles.ValidatePrefabs(BOTTLE_NAMES.Length, "bottle");
         ingredients.ValidatePrefabs(INGREDIENT_NAMES.Length, "ingredient");
-        symbols.ValidatePrefabs(COLOR_NAMES.Length/* * 2*/, "symbol");
+        symbols.ValidatePrefabs(COLOR_NAMES.Length * 2, "symbol");
+        Assert.AreEqual(COLOR_NAMES.Length, symbolColors.Length, "need "+COLOR_NAMES.Length+" color materials.");
         
         // create a solution
         int solIndex = Random.Range(0, SOLUTION_TABLE.GetLength(0));
         Debug.Log("solution index: "+solIndex);
         correctBottle = SOLUTION_TABLE[solIndex, 0];
-        correctSymbol = SOLUTION_TABLE[solIndex, 1]/* * 2 + Random.Range(0, 2)*/;
+        correctColor = SOLUTION_TABLE[solIndex, 1];
         correctToxic = SOLUTION_TABLE[solIndex, 2];
         correctIngredients = new int[INGREDIENT_COUNT];
         for (int i = 0; i < INGREDIENT_COUNT; i++)
             correctIngredients[i] = SOLUTION_TABLE[solIndex, 3 + i];
+        
+        // obtain doubled color list
+        List<int> colorList = new ();
+        for(int i = 0; i < COLOR_NAMES.Length * 2; i++)
+            colorList.Add(i/2);
+        // randomize the color to symbol matching
+        correctSymbol = -1;
+        symbolColorIds = new int[COLOR_NAMES.Length * 2];
+        for (int i = 0; i < symbolColorIds.Length; i++)
+        {
+            int idx = Random.Range(0, colorList.Count);
+            int colorId = colorList[idx];
+            colorList.RemoveAt(idx);
+            symbolColorIds[i] = colorId;
+            if (colorId == correctColor && correctSymbol < 0)
+                correctSymbol = i;
+        }
         
         // net sync the relevant solution parameters
         PhotonPacket.POTION_SYMBOL.Value = correctSymbol;
         
         string text = "solution #"+solIndex;
         text += "\nbottle #"+correctBottle+": "+BOTTLE_NAMES[correctBottle];
-        text += "\nsymbol #"+correctSymbol+", color "+COLOR_NAMES[SOLUTION_TABLE[solIndex, 1]];
+        text += "\nsymbol #"+correctSymbol+", color "+COLOR_NAMES[correctColor];
         text += "\ntoxic ingredient #"+correctToxic+": "+INGREDIENT_NAMES[correctToxic];
         text += "\ningredient list: ";
         for (int i = 0; i < correctIngredients.Length; i++)
             text += INGREDIENT_NAMES[correctIngredients[i]] + (i < INGREDIENT_COUNT - 1 ? ", " : "");
         solutionText = text;
-        debugText.text = "(color from symbol: "+COLOR_NAMES[SOLUTION_TABLE[solIndex, 1]]+")\npress P to reveal the full solution.";
+        debugText.text = "(debug only text)\npress P to reveal the solution.";
         
         // randomize the locations of each
         bottles.InitializePlacement();
@@ -107,7 +130,10 @@ public class PotionPuzzle : MonoBehaviour
         {
             if (id == correctToxic) Instantiate(toxicEffect, obj.transform);
         });
-        symbols.InitializePlacement();
+        symbols.InitializePlacement((id, obj) =>
+        {
+            obj.GetComponentInChildren<MeshRenderer>().material = symbolColors[symbolColorIds[id]];
+        });
     }
     
     private void Update()

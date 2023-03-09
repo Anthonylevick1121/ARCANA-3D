@@ -1276,12 +1276,23 @@ MonoBehaviour:
     locationParent: {fileID: 1240955043}
   symbols:
     prefabs:
-    - {fileID: 1754434976091642487, guid: 06f32f5affdf46e41ba99b625c916b3e, type: 3}
-    - {fileID: 5478717344732093165, guid: 726a626d51699b348b168ec8dd605941, type: 3}
-    - {fileID: 8303095808240243289, guid: 29f93f4ddc636cc4e9da8968ff401c9e, type: 3}
-    - {fileID: 1833983197405045750, guid: 5dbcaf59f365097409a8cded35e83d8a, type: 3}
-    - {fileID: 7681931951732638590, guid: d00ccb63102db604d9fb66f8760fc53d, type: 3}
+    - {fileID: 919132149155446097, guid: 5abbe8b447fb78d43aa41559afec27eb, type: 3}
+    - {fileID: 919132149155446097, guid: 7eda50a38860db44abb42b58fd3ed081, type: 3}
+    - {fileID: 919132149155446097, guid: 62a12a9696939c24cbb1b35cda98f388, type: 3}
+    - {fileID: 919132149155446097, guid: dfd5a8a8ed1a6f3488441f279e1c46b9, type: 3}
+    - {fileID: 919132149155446097, guid: daa0617edd0ff80408906dc6ea10018d, type: 3}
+    - {fileID: 919132149155446097, guid: 709421aef48765642a35bcb2115d17cc, type: 3}
+    - {fileID: 919132149155446097, guid: b6128fde5c58878449d6b2ebf1c46de9, type: 3}
+    - {fileID: 919132149155446097, guid: 436c2e4f0cc97d14eb12ac2f6359217f, type: 3}
+    - {fileID: 919132149155446097, guid: 113ce22a843de4146967373a9da270b7, type: 3}
+    - {fileID: 919132149155446097, guid: 42d6cb84142072742a359c80990c21c2, type: 3}
     locationParent: {fileID: 83447626}
+  symbolColors:
+  - {fileID: 2100000, guid: 87abea2b0c10b4d4e8dda828fcd50e3b, type: 2}
+  - {fileID: 2100000, guid: 5f604c179fe2d9c4ebb775bf29bd49a0, type: 2}
+  - {fileID: 2100000, guid: 34c45917dcae71648927cb083469aebd, type: 2}
+  - {fileID: 2100000, guid: 35db723d69ec7ec4fbdf0af3f3a3c4aa, type: 2}
+  - {fileID: 2100000, guid: 1c542865b0aac53469e3c1a54bcd99f2, type: 2}
 --- !u!4 &230819765
 Transform:
   m_ObjectHideFlags: 0

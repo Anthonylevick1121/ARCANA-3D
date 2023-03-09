@@ -12,12 +12,26 @@ public class LibraryStateController : MonoBehaviourPunCallbacks
     
     [SerializeField] private StatusTextListener statusText;
     [SerializeField] private TextMeshProUGUI debugText;
+    [SerializeField] private GameObject[] symbols;
+    [SerializeField] private Material solutionSymbolMat;
+    [SerializeField] private Material notSolutionSymbolMat;
     
     // Start is called before the first frame update
     private void Start()
     {
         MusicManager.DestroyInstance();
-        debugText.text = "Glowing symbol is symbol #" + (PhotonNetwork.IsConnected ? PhotonPacket.POTION_SYMBOL.Value : "(no connection)");
+        
+        // pick/fetch solution
+        int solutionSymbol = PhotonNetwork.IsConnected
+            ? PhotonPacket.POTION_SYMBOL.Value
+            : Random.Range(0, symbols.Length);
+        
+        debugText.text = "(debug text)\nGlowing symbol is symbol #" + solutionSymbol + (PhotonNetwork.IsConnected ? "" : " (no connection)");
+        
+        // assign materials
+        for (int i = 0; i < symbols.Length; i++)
+            symbols[i].GetComponentInChildren<MeshRenderer>().material =
+                i == solutionSymbol ? solutionSymbolMat : notSolutionSymbolMat;
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
