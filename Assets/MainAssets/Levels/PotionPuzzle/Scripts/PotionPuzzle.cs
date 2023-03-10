@@ -155,7 +155,8 @@ public class PotionPuzzle : MonoBehaviour
     {
         Debug.Log("added ingredient! "+ing.name);
         placedIngredients.Add(ing.Id);
-        statusText.SetStatus(INGREDIENT_NAMES[ing.Id]+" was added to the brew.");
+        // statusText.SetStatus(INGREDIENT_NAMES[ing.Id]+" was added to the brew.");
+        statusText.SetStatus("Ingredient was added to the brew.");
         ingredients.ReplaceConsumable(ing);
         return true;
     }

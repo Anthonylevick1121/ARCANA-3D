@@ -10,6 +10,6 @@ public class PotionBottle : PotionPuzzleObject
         gameObject.tag = "Bottle";
     }
     
-    public override string GetPrompt() => "Pick up " + PotionPuzzle.BOTTLE_NAMES[Id] + " Bottle";
-    // public override string GetPrompt() => "Pick up Bottle";
+    // public override string GetPrompt(HoldableItem heldItem) => "Pick up " + PotionPuzzle.BOTTLE_NAMES[Id] + " Bottle";
+    public override string GetPrompt(HoldableItem heldItem) => "Pick up Bottle";
 }

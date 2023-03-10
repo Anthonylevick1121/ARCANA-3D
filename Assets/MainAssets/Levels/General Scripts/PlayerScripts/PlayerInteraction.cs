@@ -40,9 +40,9 @@ public class PlayerInteraction : MonoBehaviour
         hoveredInteractable = interactable;
         if (hoveredInteractable)
         {
-            if (interactable.GetPrompt() != null)
+            if (interactable.GetPrompt(heldItem) != null)
             {
-                player.ui.UpdateText(interactable.GetPrompt());
+                player.ui.UpdateText(interactable.GetPrompt(heldItem));
             }
             
         }

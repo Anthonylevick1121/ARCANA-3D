@@ -1,6 +1,7 @@
 public class PotionGoal : Interactable
 {
-    public override string GetPrompt() => "Place Ingredient / Bottle";
+    public override string GetPrompt(HoldableItem heldItem) =>
+        heldItem is PotionBottle ? "Drink Potion" : "Add Ingredient to Brew";
     
     protected override void Interact(PlayerCore player, HoldableItem heldItem)
     {

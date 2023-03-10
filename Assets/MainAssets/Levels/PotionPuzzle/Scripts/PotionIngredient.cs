@@ -6,6 +6,6 @@ public class PotionIngredient : PotionPuzzleObject
         gameObject.tag = "Ingredient";
     }
     
-    public override string GetPrompt() => "Pick up " + PotionPuzzle.INGREDIENT_NAMES[Id];
-    // public override string GetPrompt() => "Pick up Ingredient";
+    // public override string GetPrompt(HoldableItem heldItem) => "Pick up " + PotionPuzzle.INGREDIENT_NAMES[Id];
+    public override string GetPrompt(HoldableItem heldItem) => "Pick up Ingredient";
 }

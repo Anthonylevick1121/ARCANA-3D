@@ -15,5 +15,5 @@ public abstract class Interactable : MonoBehaviour
     
     protected abstract void Interact(PlayerCore player, [CanBeNull] HoldableItem heldItem);
     
-    public virtual string GetPrompt() => promptMessage;
+    public virtual string GetPrompt(HoldableItem heldItem) => promptMessage;
 }
