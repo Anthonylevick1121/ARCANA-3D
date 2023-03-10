@@ -11,8 +11,8 @@ public class PlayerUI : MonoBehaviour
     // I considered removing this / moving it into another class, however the idea of having all UI-related code here
     // is appealing enough to keep this for now.
     
-    [SerializeField]
-    public TextMeshProUGUI promptText;
+    [SerializeField] public TextMeshProUGUI promptText;
+    [SerializeField] public StatusTextListener status;
     
     private void Start()
     {

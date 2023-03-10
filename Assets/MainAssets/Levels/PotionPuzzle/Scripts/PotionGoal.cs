@@ -7,6 +7,8 @@ public class PotionGoal : Interactable
     {
         if(TryAdd(heldItem))
             player.interaction.DropItem();
+        else
+            player.ui.status.SetStatus("Pick up an ingredient to add first.");
     }
     
     private bool TryAdd(HoldableItem item)
