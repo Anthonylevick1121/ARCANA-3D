@@ -1248,7 +1248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statusText: {fileID: 414904418}
   debugText: {fileID: 414904419}
-  toxicEffect: {fileID: 3980461194788399864, guid: b3220f00ec7da934d89964590a9a16a4, type: 3}
+  toxicEffect: {fileID: 1683880425011624485, guid: 141ea89c75ed965448e9c6a38cc24273, type: 3}
   bottles:
     prefabs:
     - {fileID: 632466546946022520, guid: afecc976bef79d34598aeed13bd1c800, type: 3}
