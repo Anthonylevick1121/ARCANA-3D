@@ -65,3 +65,7 @@ crashlytics-build.properties
 .vscode/
 
 UserSettings/Layouts/default-2021.dwlt
+/*.sln.DotSettings
+
+# build zip files etc
+/*.zip
