@@ -12,6 +12,8 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float distance = 3f;
     [SerializeField] private LayerMask interactMask;
     
+    [SerializeField] private AudioClip pickupAudio, dropAudio;
+    
     private Interactable hoveredInteractable;
     
     // Start is called before the first frame update
@@ -60,7 +62,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (!heldItem) return;
         // remove the constraints on the held item
-        heldItem.rbody.isKinematic = false;
+        heldItem.SetIsHeld(false);
         heldItem.transform.SetParent(null);
         Debug.Log("dropped "+heldItem.name);
         heldItem.gameObject.layer = LayerMask.NameToLayer("Interactable");
@@ -71,7 +73,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         DropItem(); // drop currently-held item if any
         // disable gravity physics
-        item.rbody.isKinematic = true;
+        item.SetIsHeld(true);
         // parent the item
         item.transform.SetParent(heldItemAnchor);
         // align position

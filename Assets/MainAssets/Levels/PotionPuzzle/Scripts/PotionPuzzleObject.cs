@@ -1,4 +1,6 @@
+using UnityEngine;
+
 public class PotionPuzzleObject : HoldableItem
 {
-    public int Id;
+    [HideInInspector] public int Id;
 }

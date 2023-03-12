@@ -3,12 +3,14 @@ public class PotionGoal : Interactable
     public override string GetPrompt(HoldableItem heldItem) =>
         heldItem is PotionBottle ? "Drink Potion" : "Add Ingredient to Brew";
     
-    protected override void Interact(PlayerCore player, HoldableItem heldItem)
+    protected override bool Interact( PlayerCore player, HoldableItem heldItem)
     {
-        if(TryAdd(heldItem))
+        bool success = TryAdd(heldItem);
+        if(success)
             player.interaction.DropItem();
         else
             player.ui.status.SetStatus("Pick up an ingredient to add first.");
+        return success;
     }
     
     private bool TryAdd(HoldableItem item)

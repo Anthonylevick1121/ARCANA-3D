@@ -19,11 +19,13 @@ public class PlayerMovement : MonoBehaviour
     private float gravity = -9.8f;
     private float currentFallSpeed = 0;
     
-    [SerializeField]
-    private float moveSpeed = 5.0f;
-    [SerializeField]
-    private float jumpHeight = 0.6f;
-
+    [SerializeField] private float moveSpeed = 5.0f;
+    [SerializeField] private float jumpHeight = 0.6f;
+    [SerializeField] private AudioSource footstepPlayer;
+    [SerializeField] private AudioClip walkAudio, runAudio;
+    private float startVolume;
+    private bool isMoving;
+    
     // Start is called before the first frame update
     private void Start()
     {
@@ -35,6 +37,10 @@ public class PlayerMovement : MonoBehaviour
         player.InputActions.Jump.performed += ctx => Jump();
         player.InputActions.Crouch.performed += ctx => Crouch();
         player.InputActions.Sprint.performed += ctx => Sprint(ctx.ReadValueAsButton());
+        
+        footstepPlayer.clip = walkAudio;
+        startVolume = footstepPlayer.volume;
+        isMoving = false;
     }
     
     private void FixedUpdate()
@@ -42,68 +48,91 @@ public class PlayerMovement : MonoBehaviour
         // handle continuous movement
         
         //3-2-23 added an ifStatement to wrap the function in 
-        //if (view.IsMine)
+        //if (!view.IsMine) return;
+        
+        Vector2 input = player.InputActions.Movement.ReadValue<Vector2>();
+        
+        Vector3 movement = moveSpeed * transform.TransformDirection(input.x, 0, input.y);
+        
+        // consistently add downward acceleration
+        currentFallSpeed += gravity * Time.fixedDeltaTime;
+        
+        if (isGrounded && currentFallSpeed < 0)
         {
-            Vector2 input = player.InputActions.Movement.ReadValue<Vector2>();
-            Vector3 movement = moveSpeed * transform.TransformDirection(input.x, 0, input.y);
+            currentFallSpeed = -2f; // the -2 helps ensure the character collider stays touching the ground.
+        }
         
-            // consistently add downward acceleration
-            currentFallSpeed += gravity * Time.fixedDeltaTime;
+        movement.y = currentFallSpeed;
+        movement *= Time.fixedDeltaTime;
+        Vector3 pos = transform.position;
+        /*CollisionFlags flags = */controller.Move(movement);
+        Vector3 delta = transform.position - pos;
+        if (currentFallSpeed > 0 && delta.y < movement.y / 2/*(flags & CollisionFlags.CollidedAbove) > 0*/)
+        {
+            // we moved less than we should: airborne collision, reflect upward momentum but a little slower.
+            // The reason I'm doing the above condition instead of checking the flags is because sometimes an upward
+            // collision still allows the character to shove around it and move up anyways. This code will allow for
+            // that flexibility while still ensuring you don't stick to the roof.
+            currentFallSpeed = -currentFallSpeed / 2;
+        }
         
-            if (isGrounded && currentFallSpeed < 0)
-            {
-                currentFallSpeed = -2f; // the -2 helps ensure the character collider stays touching the ground.
-            }
+        // cached grounded var
+        isGrounded = controller.isGrounded;
         
-            movement.y = currentFallSpeed;
-            movement *= Time.fixedDeltaTime;
-            Vector3 pos = transform.position;
-            /*CollisionFlags flags = */controller.Move(movement);
-            Vector3 delta = transform.position - pos;
-            if (currentFallSpeed > 0 && delta.y < movement.y / 2/*(flags & CollisionFlags.CollidedAbove) > 0*/)
-            {
-                // we moved less than we should: airborne collision, reflect upward momentum but a little slower.
-                // The reason I'm doing the above condition instead of checking the flags is because sometimes an upward
-                // collision still allows the character to shove around it and move up anyways. This code will allow for
-                // that flexibility while still ensuring you don't stick to the roof.
-                currentFallSpeed = -currentFallSpeed / 2;
-            }
-        
-            // cached grounded var
-            isGrounded = controller.isGrounded;
-        
-            // handle crouching
-            if (lerpCrouch)
-            {
-                crouchTimer += Time.fixedDeltaTime;
+        // handle crouching
+        if (lerpCrouch)
+        {
+            crouchTimer += Time.fixedDeltaTime;
             
-                float p = crouchTimer * crouchTimer;
-                controller.height = Mathf.Lerp(controller.height, crouching ? 1 : 2, p);
+            float p = crouchTimer * crouchTimer;
+            controller.height = Mathf.Lerp(controller.height, crouching ? 1 : 2, p);
             
-                if (p >= 1)
-                {
-                    lerpCrouch = false;
-                    crouchTimer = 0f;
-                }
+            if (p >= 1)
+            {
+                lerpCrouch = false;
+                crouchTimer = 0f;
             }
         }
         
+        // handle audio; stop footsteps if in air or not moving, and start audio if on ground and moving
+        delta.y = 0; // audio doesn't care about vertical movement
+        if (footstepPlayer.isPlaying && (!isGrounded || delta == Vector3.zero))
+        {
+            isMoving = false; // we aren't moving anymore, future movements should max the volume again
+            // reduce volume linearly over the course of 0.25 seconds
+            float newVolume = footstepPlayer.volume - (startVolume / 0.25f) * Time.fixedDeltaTime;
+            if (newVolume <= 0)
+                footstepPlayer.Stop();
+            else
+                footstepPlayer.volume = newVolume;
+        }
+        else if (!isMoving && (isGrounded && delta != Vector3.zero))
+        {
+            // moving now
+            isMoving = true;
+            footstepPlayer.volume = startVolume;
+            if(!footstepPlayer.isPlaying)
+                footstepPlayer.Play();
+        }
     }
     
-    public void Crouch()
+    private void Crouch()
     {
         crouching = !crouching;
         crouchTimer = 0;
         lerpCrouch = true;
     }
-
-    public void Sprint(bool sprint)
+    
+    private void Sprint(bool sprint)
     {
         sprinting = sprint;
         moveSpeed = sprinting ? 8 : 5;
+        footstepPlayer.clip = sprint ? runAudio : walkAudio;
+        if(isMoving && !footstepPlayer.isPlaying)
+            footstepPlayer.Play();
     }
     
-    public void Jump()
+    private void Jump()
     {
         if (isGrounded)
         {
