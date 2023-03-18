@@ -13,6 +13,7 @@ public class PlayerUI : MonoBehaviour
     
     [SerializeField] public TextMeshProUGUI promptText;
     [SerializeField] public StatusTextListener status;
+    [SerializeField] public TextMeshProUGUI debugText;
     
     private void Start()
     {

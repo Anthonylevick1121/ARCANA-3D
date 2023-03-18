@@ -30,4 +30,5 @@ public static class PhotonPacket
 {
     public static readonly PhotonPacketType<int> POTION_SYMBOL = new ();
     public static readonly PhotonPacketType<bool> POTION_WIN = new ();
+    public static readonly PhotonPacketType<MazeSectionPos> MAZE_LEVER = new ();
 }
