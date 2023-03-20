@@ -12,11 +12,14 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private PlayerCore player;
     
+    public bool debugNavigation;
     public Transform debugTarget;
     
     // todo the lighting... I think the right call for making the lighting work is going to be grid-ifying the maze
     // todo  and using x depth neighbor checks every time we cross a tile boundary. Honestly not that expensive just
     // todo  takes a bit of processing upfront.
+    
+    // todo JK - actually, look at raycasts! Can cast forward and down to find things!
     
     // just going to refresh every frame for now, doesn't seem to be that bad lol
     
@@ -83,11 +86,13 @@ public class EnemyController : MonoBehaviour
         
         if(timeSinceRefresh >= nextRefreshInterval)
             RefreshTarget();*/
-        navAgent.SetDestination(debugTarget ? debugTarget.position : player.transform.position);
+        navAgent.SetDestination(player.transform.position);
         
-        if (!navAgent.hasPath) return;
+        if (!debugNavigation) return;
+        NavMeshPath path = new ();
+        navAgent.CalculatePath(debugTarget ? debugTarget.position : player.transform.position, path);
         Vector3 last = Vector3.zero;
-        foreach (Vector3 pos in navAgent.path.corners)
+        foreach (Vector3 pos in path.corners)
         {
             if (last == Vector3.zero)
             {
