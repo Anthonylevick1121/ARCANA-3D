@@ -172,7 +172,7 @@ public class HelperEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        EditorGUILayout.HelpBox("I'd really RECOMMEND you don't touch this or its game-view buttons lol\n\n" +
+        EditorGUILayout.HelpBox("I'd REALLY RECOMMEND you don't touch this or its game-view buttons lol\n\n" +
             "There is a high chance of breaking things and/or getting the editor stuck in an infinite loop.", MessageType.Warning);
         base.OnInspectorGUI();
     }
