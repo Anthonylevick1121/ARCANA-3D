@@ -11,7 +11,7 @@ public class MazePuzzle : MonoBehaviour
     // ORDERED list of the corridor parent objects, in order of the MazeSectionPos enum
     [SerializeField] private GameObject[] corridorParents;
     
-    [SerializeField] private Renderer[] ritualSymbols;
+    [SerializeField] private GameObject[] ritualSymbols;
     [SerializeField] private Material onSymbolMat;//, offSymbolMat;
     // internal state, tracking which levers have been touched at least once
     private bool[] touchedLevers = new bool[9];
@@ -25,7 +25,7 @@ public class MazePuzzle : MonoBehaviour
         int idx = (int) pos;
         if (touchedLevers[idx]) return; // no need to recompute if same value
         touchedLevers[idx] = true;
-        if(ritualSymbols.Length > 0) ritualSymbols[idx].material = onSymbolMat;
+        ritualSymbols[idx].GetComponentInChildren<Renderer>().material = onSymbolMat;
         // we've touched one more lever
         leverTouchCount++;
         enemy.OnLeverPulled();

@@ -36,7 +36,7 @@ public class TorchLighter : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Enemy")) return;
+        if (!other.CompareTag("EnemyTorch")) return;
         
         if (MazePuzzle.instance.enemy.CheckTorchEffectReachable(tilePos))
             light.enabled = false;
@@ -47,7 +47,7 @@ public class TorchLighter : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         // no stay behavior for doused lights.
-        if (!other.CompareTag("Enemy") || !light.enabled) return;
+        if (!other.CompareTag("EnemyTorch") || !light.enabled) return;
         
         // every half second, try again
         curStayTime += Time.fixedDeltaTime;
@@ -62,7 +62,7 @@ public class TorchLighter : MonoBehaviour
     
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("EnemyTorch"))
             light.enabled = true;
     }
     

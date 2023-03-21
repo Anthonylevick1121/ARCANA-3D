@@ -29,7 +29,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             (MazeSectionPos pos, bool flipped) = PhotonPacket.MAZE_LEVER.Get(deltaProps);
             int idx = (int) pos;
             // set the glow state of the matching symbol
-            mazeSymbols.GetChild(idx).GetComponent<Renderer>().material = flipped ? onSymbolMat : offSymbolMat;
+            mazeSymbols.GetChild(idx).GetComponentInChildren<Renderer>().material = flipped ? onSymbolMat : offSymbolMat;
             // ensure map section is unhidden
             mapCover.GetChild(idx).gameObject.SetActive(false);
         }
