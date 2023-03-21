@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     
     [SerializeField] private PlayerCore player;
     [SerializeField] private Transform playerRespawnPos;
+    [SerializeField] private Transform enemyRespawnPos;
     
     [SerializeField] private float baseSpeed;
     [SerializeField] private float speedGainPerLever;
@@ -136,6 +137,7 @@ public class EnemyController : MonoBehaviour
     {
         player.ui.status.SetStatus("You are caught!\naaahhgghhhh...");
         player.movement.SetPosition(playerRespawnPos.position);
+        navAgent.Warp(enemyRespawnPos.position);
     }
     
     public bool CheckTorchEffectReachable(Vector3 pos)
