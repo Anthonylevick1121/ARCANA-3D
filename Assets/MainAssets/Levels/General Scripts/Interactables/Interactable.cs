@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class Interactable : MonoBehaviour
 {
     [SerializeField] private string promptMessage;
-    [HideInInspector] protected AudioSource audio;
+    [HideInInspector] protected new AudioSource audio;
     [SerializeField] private AudioClip interactionSound;
     
     protected virtual void Start()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TorchLighter : MonoBehaviour
 {
-    [SerializeField] private Light light;
+    [SerializeField] private new Light light;
     
     private Vector3 tilePos;
     
