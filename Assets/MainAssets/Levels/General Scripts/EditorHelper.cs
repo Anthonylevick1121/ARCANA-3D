@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -8,6 +9,11 @@ using UnityEngine.AI;
 [ExecuteInEditMode]
 public class EditorHelper : MonoBehaviour
 {
+    private void Awake()
+    {
+        gameObject.hideFlags |= HideFlags.DontSaveInBuild;
+    }
+    
     public Transform moveDest;
     
     [NonSerialized]
@@ -177,3 +183,4 @@ public class HelperEditor : Editor
         base.OnInspectorGUI();
     }
 }
+#endif

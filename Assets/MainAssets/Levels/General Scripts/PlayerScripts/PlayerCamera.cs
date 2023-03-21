@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(PlayerCore))]
 public class PlayerCamera : MonoBehaviour
 {
-    [SerializeField] public new Camera camera;
+    [SerializeField] public Camera camera;
     [SerializeField] private float xSensitivity = 10.0f;
     [SerializeField] private float ySensitivity = 10.0f;
     

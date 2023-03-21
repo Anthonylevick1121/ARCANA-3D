@@ -4,18 +4,11 @@ public class MazeSectionLever : Interactable
 {
     public MazeSectionPos mazeSection;
     
-    private new MeshRenderer renderer;
-    [SerializeField] private Material startMat, flipMat;
+    // private new MeshRenderer renderer;
+    // [SerializeField] private Material startMat, flipMat;
     
     private Transform parent;
     private bool flipped;
-    
-    private enum CorridorObjects
-    {
-        Lever = 0,
-        TorchStartOn, TorchStartOff,
-        WallStartOn, WallStartOff
-    }
     
     public override string GetPrompt(HoldableItem item) => "Flip Lever";
     
@@ -24,23 +17,28 @@ public class MazeSectionLever : Interactable
     {
         base.Start();
         parent = transform.parent;
-        renderer = GetComponent<MeshRenderer>();
+        // renderer = GetComponent<MeshRenderer>();
         flipped = false;
-        renderer.material = startMat;
+        // renderer.material = startMat;
     }
     
     protected override bool Interact(PlayerCore player, HoldableItem heldItem)
     {
         // toggle torches and walls
-        for (int i = 1; i < parent.childCount; i++)
+        for (int i = 0; i <= 4; i++)
         {
-            GameObject obj = parent.GetChild(i).gameObject;
+            GameObject obj = parent.GetChild(i+2).gameObject;
             obj.SetActive(!obj.activeSelf);
         }
         
+        // tell the main puzzle, so it knows when all have been flipped later
+        if(mazeSection != MazeSectionPos.Tutorial)
+            MazePuzzle.instance.TouchLever(mazeSection);
+        
         // rendering update
         flipped = !flipped;
-        renderer.material = flipped ? flipMat : startMat;
+        transform.localRotation *= Quaternion.Euler(Vector3.forward * 180);
+        // renderer.material = flipped ? flipMat : startMat;
         
         // temp notification
         string mainStatus = "Sounds echo through the maze...\nThe passages have changed.";
@@ -50,7 +48,7 @@ public class MazeSectionLever : Interactable
         player.ui.status.SetStatus(mainStatus);
         
         // send to librarian (should only send on first but it'll just ignore if already sent)
-        PhotonPacket.MAZE_LEVER.Value = mazeSection;
+        PhotonPacket.MAZE_LEVER.Value = (mazeSection, flipped);
         
         return true;
     }

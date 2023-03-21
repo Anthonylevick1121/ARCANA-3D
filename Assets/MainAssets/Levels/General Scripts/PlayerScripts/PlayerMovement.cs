@@ -139,5 +139,12 @@ public class PlayerMovement : MonoBehaviour
             currentFallSpeed = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
     }
+
+    public void SetPosition(Vector3 pos)
+    {
+        controller.enabled = false;
+        transform.position = pos;
+        controller.enabled = true;
+    }
 }
 

@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,8 +8,11 @@ public class EnemyController : MonoBehaviour
 {
     private NavMeshAgent navAgent;
     
-    [SerializeField] private TextMeshProUGUI debugText;
     [SerializeField] private PlayerCore player;
+    [SerializeField] private Transform playerRespawnPos;
+    
+    [SerializeField] private float baseSpeed;
+    [SerializeField] private float speedGainPerLever;
     
     public bool debugNavigation;
     public Transform debugTarget;
@@ -26,10 +28,10 @@ public class EnemyController : MonoBehaviour
     // we don't really want to be setting the destination every frame
     // that would be really costly on a large map
     // instead, refresh it more often depending on how close we are to the player.
-    private readonly float distanceUpdateRatio = 0.9f;
-    private readonly float maxRefreshInterval = 5f; // seconds
-    private float nextRefreshInterval;
-    private float timeSinceRefresh;
+    // private readonly float distanceUpdateRatio = 0.9f;
+    // private readonly float maxRefreshInterval = 5f; // seconds
+    // private float nextRefreshInterval;
+    // private float timeSinceRefresh;
     // private bool valid, firstValid;
     
     private float distCache;
@@ -42,14 +44,17 @@ public class EnemyController : MonoBehaviour
         navAgent = GetComponent<NavMeshAgent>();
         // firstValid = false;
         // RefreshTarget();
+        navAgent.speed = baseSpeed;
     }
+    
+    public void OnLeverPulled() => navAgent.speed += speedGainPerLever;
     
     private void RefreshTarget()
     {
         navAgent.SetDestination(player.transform.position);
         // nextRefreshDistance = navAgent.remainingDistance * distanceUpdateRatio;
-        timeSinceRefresh = 0;
-        nextRefreshInterval = -1;
+        // timeSinceRefresh = 0;
+        // nextRefreshInterval = -1;
         // valid = false;
     }
     
@@ -86,7 +91,7 @@ public class EnemyController : MonoBehaviour
         
         if(timeSinceRefresh >= nextRefreshInterval)
             RefreshTarget();*/
-        navAgent.SetDestination(player.transform.position);
+        navAgent.SetDestination(debugNavigation && debugTarget ? debugTarget.position : player.transform.position);
         
         if (!debugNavigation) return;
         NavMeshPath path = new ();
@@ -104,9 +109,9 @@ public class EnemyController : MonoBehaviour
         }
     }
     
-    private void OnTriggerEnter(Collider other)
+    public void RespawnPlayer()
     {
-        if(other.CompareTag("Player"))
-            player.ui.status.SetStatus("You are caught and ded!\naaahhgghhhh...");
+        player.ui.status.SetStatus("You are caught!\naaahhgghhhh...");
+        player.movement.SetPosition(playerRespawnPos.position);
     }
 }

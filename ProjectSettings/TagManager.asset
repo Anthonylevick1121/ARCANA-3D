@@ -7,6 +7,8 @@ TagManager:
   - Ingredient
   - Bottle
   - Enemy
+  - EnemyTorch
+  - EnemyPlayerTouch
   layers:
   - Default
   - TransparentFX
