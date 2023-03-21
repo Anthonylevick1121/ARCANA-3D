@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private float currentFallSpeed = 0;
     
     [SerializeField] private float moveSpeed = 5.0f;
+    [SerializeField] private float sprintMultiplier = 2f;
     [SerializeField] private float jumpHeight = 0.6f;
     [SerializeField] private AudioSource footstepPlayer;
     [SerializeField] private AudioClip walkAudio, runAudio;
@@ -52,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
         
         Vector2 input = player.InputActions.Movement.ReadValue<Vector2>();
         
-        Vector3 movement = moveSpeed * transform.TransformDirection(input.x, 0, input.y);
+        Vector3 movement = moveSpeed * (sprinting ? sprintMultiplier : 1) * transform.TransformDirection(input.x, 0, input.y);
         
         // consistently add downward acceleration
         currentFallSpeed += gravity * Time.fixedDeltaTime;
@@ -126,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
     private void Sprint(bool sprint)
     {
         sprinting = sprint;
-        moveSpeed = sprinting ? 8 : 5;
+        // moveSpeed = sprinting ? 8 : 5;
         footstepPlayer.clip = sprint ? runAudio : walkAudio;
         if(isMoving && !footstepPlayer.isPlaying)
             footstepPlayer.Play();
