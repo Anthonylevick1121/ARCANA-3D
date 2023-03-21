@@ -80,7 +80,8 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             OnLeverFlip((MazeSectionPos) PhotonPacket.MAZE_LEVER.Value, PhotonPacket.MAZE_LEVER_FLIP.Value);
         }
         
-        if (PhotonPacket.MAZE_ENEMY.WasChanged(deltaProps))
+        // just disable this for now
+        if (false && PhotonPacket.MAZE_ENEMY.WasChanged(deltaProps))
         {
             int idx = PhotonPacket.MAZE_ENEMY.Get(deltaProps);
             // light the torch in old section
