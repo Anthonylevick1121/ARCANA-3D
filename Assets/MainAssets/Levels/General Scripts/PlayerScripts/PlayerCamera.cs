@@ -1,8 +1,5 @@
-using Photon.Pun;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 [RequireComponent(typeof(PlayerCore))]
 public class PlayerCamera : MonoBehaviour

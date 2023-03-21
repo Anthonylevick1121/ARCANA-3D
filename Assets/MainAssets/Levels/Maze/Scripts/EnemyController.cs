@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
@@ -13,6 +14,9 @@ public class EnemyController : MonoBehaviour
     
     [SerializeField] private float baseSpeed;
     [SerializeField] private float speedGainPerLever;
+    
+    [SerializeField] private float torchEffectDistMultiplier; // 6.5
+    [SerializeField] private float minTorchEffectSpeedFactor; // 6
     
     public bool debugNavigation;
     public Transform debugTarget;
@@ -113,5 +117,19 @@ public class EnemyController : MonoBehaviour
     {
         player.ui.status.SetStatus("You are caught!\naaahhgghhhh...");
         player.movement.SetPosition(playerRespawnPos.position);
+    }
+    
+    public bool CheckTorchEffectReachable(Vector3 pos)
+    {
+        // use the nav mesh to our advantage
+        NavMeshPath path = new ();
+        navAgent.CalculatePath(pos, path);
+        if (path.status != NavMeshPathStatus.PathComplete)
+            return false; // only reachable tiles should be affected
+        float distance = 0;
+        for (int i = 1; i < path.corners.Length; i++)
+            distance += Vector3.Distance(path.corners[i], path.corners[i - 1]);
+        
+        return distance <= torchEffectDistMultiplier * Mathf.Max(minTorchEffectSpeedFactor, navAgent.speed);
     }
 }

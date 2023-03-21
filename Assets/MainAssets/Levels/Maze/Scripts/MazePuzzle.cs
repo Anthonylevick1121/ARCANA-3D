@@ -5,8 +5,8 @@ public class MazePuzzle : MonoBehaviour
     public static MazePuzzle instance;
     private void Awake() => instance = this;
     
-    [SerializeField] private PlayerCore player;
-    [SerializeField] private EnemyController enemy;
+    [SerializeField] public PlayerCore player;
+    [SerializeField] public EnemyController enemy;
     
     // ORDERED list of the corridor parent objects, in order of the MazeSectionPos enum
     [SerializeField] private GameObject[] corridorParents;

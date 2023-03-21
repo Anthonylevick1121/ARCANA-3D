@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TorchLighter : MonoBehaviour
 {
     [SerializeField] private new Light light;
-    
+
     private Vector3 tilePos;
     
     private static readonly float lightCheckInterval = 0.5f;
@@ -13,6 +14,7 @@ public class TorchLighter : MonoBehaviour
     {
         Transform transform = this.transform.parent;
         Vector3 pos = transform.localPosition;
+        pos.y = 1; // right above ground
         // move to center of tile
         switch (transform.rotation.eulerAngles.y)
         {
@@ -36,7 +38,7 @@ public class TorchLighter : MonoBehaviour
     {
         if (!other.CompareTag("Enemy")) return;
         
-        if (CheckReachable(other.transform.position))
+        if (MazePuzzle.instance.enemy.CheckTorchEffectReachable(tilePos))
             light.enabled = false;
         else
             curStayTime = 0;
@@ -51,7 +53,7 @@ public class TorchLighter : MonoBehaviour
         curStayTime += Time.fixedDeltaTime;
         if (curStayTime >= lightCheckInterval)
         {
-            if(CheckReachable(other.transform.position))
+            if(MazePuzzle.instance.enemy.CheckTorchEffectReachable(tilePos))
                 light.enabled = false;
             else
                 curStayTime -= lightCheckInterval;
@@ -64,7 +66,7 @@ public class TorchLighter : MonoBehaviour
             light.enabled = true;
     }
     
-    private bool CheckReachable(Vector3 startPos)
+    private bool CheckReachableRaycast(Vector3 startPos)
     {
         // calc delta on x and z axis
         // algo starts at the target pos and tries to get to tile pos
@@ -80,18 +82,20 @@ public class TorchLighter : MonoBehaviour
         Vector3 xFirstMid = startPos + deltaX;
         Vector3 zFirstMid = startPos + deltaZ;
         
+        LayerMask mask = LayerMask.NameToLayer("Walls");
+        
         // try x first
-        if (Physics.Raycast(startPos, deltaX, xDist) && Physics.Raycast(xFirstMid, deltaZ, zDist))
+        if (Physics.Raycast(startPos, deltaX, xDist, mask) && Physics.Raycast(xFirstMid, deltaZ, zDist, mask))
         {
-            // Debug.DrawLine(startPos, xFirstMid, Color.blue, 2f);
-            // Debug.DrawLine(xFirstMid, xFirstMid+deltaZ, Color.cyan, 2f);
+            Debug.DrawLine(startPos, xFirstMid, Color.blue, 2f);
+            Debug.DrawLine(xFirstMid, xFirstMid+deltaZ, Color.cyan, 2f);
             return true;
         }
         // try z first now
-        if (Physics.Raycast(startPos, deltaZ, zDist) && Physics.Raycast(zFirstMid, deltaX, xDist))
+        if (Physics.Raycast(startPos, deltaZ, zDist, mask) && Physics.Raycast(zFirstMid, deltaX, xDist, mask))
         {
-            // Debug.DrawLine(startPos, zFirstMid, Color.blue, 2f);
-            // Debug.DrawLine(zFirstMid, zFirstMid+deltaX, Color.cyan, 2f);
+            Debug.DrawLine(startPos, zFirstMid, Color.blue, 2f);
+            Debug.DrawLine(zFirstMid, zFirstMid+deltaX, Color.cyan, 2f);
             return true;
         }
         

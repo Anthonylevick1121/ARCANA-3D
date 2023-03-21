@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Ingredient
   - Bottle
-  - Enemy
   - EnemyTorch
   - EnemyPlayerTouch
   layers:
@@ -17,7 +16,7 @@ TagManager:
   - Water
   - UI
   - Interactable
-  - 
+  - Walls
   - 
   - 
   - 
