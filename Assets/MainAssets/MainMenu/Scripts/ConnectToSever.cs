@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Serialization;
 
 public class ConnectToSever : MonoBehaviourPunCallbacks
 {
     // Start is called before the first frame update
-    public LevelLoader level;
+    [FormerlySerializedAs("level")] public TransitionSceneLoader sceneLoader;
     void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = false;
@@ -20,6 +21,6 @@ public class ConnectToSever : MonoBehaviourPunCallbacks
     
     public override void OnJoinedLobby()
     {
-        level.LoadNextLevel("3_RoomSelect"); // CreateAndJoin
+        sceneLoader.LoadSceneWithFade("3_RoomSelect"); // CreateAndJoin
     }
 }

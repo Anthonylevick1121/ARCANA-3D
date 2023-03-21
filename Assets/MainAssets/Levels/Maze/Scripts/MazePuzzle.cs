@@ -31,6 +31,8 @@ public class MazePuzzle : MonoBehaviour
         enemy.OnLeverPulled();
     }
     
+    private void Start() => MusicManager.DestroyInstance();
+    
     private void Update()
     {
         int color = -1;
