@@ -11,7 +11,9 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
     [SerializeField] private Transform mapLit;
     [SerializeField] private Transform mapUnlit;
     
-    [SerializeField] private Material offSymbolMat, onSymbolMat;
+    private GameObject[] defaultOpenSymbolBacks;
+    private GameObject[] defaultClosedSymbolBacks;
+    // [SerializeField] private Material offSymbolMat, onSymbolMat;
     
     private LibraryState library;
     private int enemyPos;
@@ -20,23 +22,67 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
     private void Start()
     {
         library = GetComponent<LibraryState>();
+        int symbolCount = mazeSymbols.childCount;
+        defaultOpenSymbolBacks = new GameObject[symbolCount];
+        defaultClosedSymbolBacks = new GameObject[symbolCount];
+        for (int i = 0; i < symbolCount; i++)
+        {
+            defaultOpenSymbolBacks[i] = mazeSymbols.GetChild(i).Find("Circle").gameObject;
+            defaultClosedSymbolBacks[i] = mazeSymbols.GetChild(i).Find("Triangle").gameObject;
+        }
+    }
+    
+    private void Update()
+    {
+        if (!library.debug) return;
+        
+        int color = -1;
+        // debug press-any-lever
+        for (KeyCode i = KeyCode.Alpha0; i <= KeyCode.Alpha9; i++)
+        {
+            if (Input.GetKeyDown(i))
+            {
+                color = i == KeyCode.Alpha0 ? 9 : i - KeyCode.Alpha1;
+                break;
+            }
+        }
+        for (KeyCode i = KeyCode.Keypad0; i <= KeyCode.Keypad9; i++)
+        {
+            if (Input.GetKeyDown(i))
+            {
+                color = i == KeyCode.Keypad0 ? 9 : i - KeyCode.Keypad1;
+                break;
+            }
+        }
+        
+        if (color >= 0)
+        {
+            OnLeverFlip((MazeSectionPos) color, defaultOpenSymbolBacks[color].activeSelf);
+        }
+    }
+    
+    private void OnLeverFlip(MazeSectionPos pos, bool flipped)
+    {
+        int idx = (int) pos;
+        // set the glow state of the matching symbol
+        // mazeSymbols.GetChild(idx).GetComponentInChildren<Renderer>().material = flipped ? onSymbolMat : offSymbolMat;
+        defaultOpenSymbolBacks[idx].SetActive(!flipped);
+        defaultClosedSymbolBacks[idx].SetActive(flipped);
+        // ensure map section is unhidden
+        mapCover.GetChild(idx).gameObject.SetActive(false);
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
-        if (PhotonPacket.MAZE_LEVER.WasChanged(deltaProps))
+        if (PhotonPacket.MAZE_LEVER_ACTION.GetOr(deltaProps, false))
         {
-            (MazeSectionPos pos, bool flipped) = PhotonPacket.MAZE_LEVER.Get(deltaProps);
-            int idx = (int) pos;
-            // set the glow state of the matching symbol
-            mazeSymbols.GetChild(idx).GetComponentInChildren<Renderer>().material = flipped ? onSymbolMat : offSymbolMat;
-            // ensure map section is unhidden
-            mapCover.GetChild(idx).gameObject.SetActive(false);
+            print("maze lever flip: "+deltaProps);
+            OnLeverFlip((MazeSectionPos) PhotonPacket.MAZE_LEVER.Value, PhotonPacket.MAZE_LEVER_FLIP.Value);
         }
         
         if (PhotonPacket.MAZE_ENEMY.WasChanged(deltaProps))
         {
-            int idx = (int) PhotonPacket.MAZE_ENEMY.Get(deltaProps);
+            int idx = PhotonPacket.MAZE_ENEMY.Get(deltaProps);
             // light the torch in old section
             mapLit.GetChild(enemyPos).gameObject.SetActive(true);
             mapUnlit.GetChild(enemyPos).gameObject.SetActive(false);

@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class MazeSectionLever : Interactable
@@ -44,12 +45,31 @@ public class MazeSectionLever : Interactable
         string mainStatus = "Sounds echo through the maze...\nThe passages have changed.";
         
         string name = System.Enum.GetName(typeof(MazeSectionPos), mazeSection);
-        mainStatus += $"\n(lever {name} turned to state {(flipped ? "on" : "off")})";
+        string msg = $"(lever {name} turned to state {(flipped ? "on" : "off")})";
+        if (MazePuzzle.instance.debug) mainStatus += "\n" + msg;
+        else print(msg);
         player.ui.status.SetStatus(mainStatus);
         
         // send to librarian (should only send on first but it'll just ignore if already sent)
-        PhotonPacket.MAZE_LEVER.Value = (mazeSection, flipped);
+        PhotonPacket.MAZE_LEVER.Value = (int) mazeSection;
+        PhotonPacket.MAZE_LEVER_FLIP.Value = flipped;
+        if(PhotonNetwork.IsConnected) PhotonNetwork.SendAllOutgoingCommands();
+        PhotonPacket.MAZE_LEVER_ACTION.Value = true;
+        if(PhotonNetwork.IsConnected) PhotonNetwork.SendAllOutgoingCommands();
+        PhotonPacket.MAZE_LEVER_ACTION.Value = false;
         
         return true;
+    }
+}
+
+public class LeverFlip
+{
+    public readonly MazeSectionPos pos;
+    public readonly bool flipped;
+    
+    public LeverFlip(MazeSectionPos pos, bool flipped)
+    {
+        this.pos = pos;
+        this.flipped = flipped;
     }
 }

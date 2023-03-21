@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections.Generic;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
@@ -16,8 +17,10 @@ public sealed class PhotonPacketType<T>
     public T Value
     {
         get => (T) PhotonNetwork.CurrentRoom?.CustomProperties[key];
-        set => PhotonNetwork.CurrentRoom?.SetCustomProperties(new Hashtable {{ key, value }});
+        set => PhotonNetwork.CurrentRoom?.SetCustomProperties(new Hashtable { { key, value } });
     }
+    
+    // public Hashtable CreateDelta(T value) => new Hashtable { { key, value } };
     
     public bool WasChanged(Hashtable changedProps) => changedProps.ContainsKey(key);
     
@@ -39,7 +42,11 @@ public static class PhotonPacket
     public static readonly PhotonPacketType<int> POTION_SYMBOL = new ();
     public static readonly PhotonPacketType<bool> POTION_WIN = new ();
     
-    public static readonly PhotonPacketType<(MazeSectionPos, bool)> MAZE_LEVER = new ();
-    public static readonly PhotonPacketType<MazeSectionPos> MAZE_ENEMY = new ();
+    // separated because fricc photon
+    public static readonly PhotonPacketType<int> MAZE_LEVER = new ();
+    public static readonly PhotonPacketType<bool> MAZE_LEVER_FLIP = new ();
+    public static readonly PhotonPacketType<bool> MAZE_LEVER_ACTION = new ();
+    
+    public static readonly PhotonPacketType<int> MAZE_ENEMY = new ();
     public static readonly PhotonPacketType<bool> MAZE_WIN = new ();
 }

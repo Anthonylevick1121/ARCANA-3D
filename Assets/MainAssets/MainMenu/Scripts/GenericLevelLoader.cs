@@ -21,12 +21,19 @@ public class GenericLevelLoader : MonoBehaviour
     
     // false for the static loader, true for loading screen one
     private bool load = true;
+    private bool updated = false;
     
     private void Update()
     {
         if (load)
         {
+            if (!updated)
+            {
+                updated = true;
+                return;
+            }
             load = false;
+            PhotonNetwork.SendAllOutgoingCommands();
             PhotonNetwork.LoadLevel(instance.nextScene);
         }
     }

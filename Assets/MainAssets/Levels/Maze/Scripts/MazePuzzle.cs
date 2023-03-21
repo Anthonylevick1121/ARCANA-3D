@@ -5,6 +5,8 @@ public class MazePuzzle : MonoBehaviour
     public static MazePuzzle instance;
     private void Awake() => instance = this;
     
+    [HideInInspector] public bool debug = false;
+    
     [SerializeField] public PlayerCore player;
     [SerializeField] public EnemyController enemy;
     
@@ -35,6 +37,11 @@ public class MazePuzzle : MonoBehaviour
     
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+            debug = !debug;
+        
+        if (!debug) return;
+        
         int color = -1;
         // debug press-any-lever
         for (KeyCode i = KeyCode.Alpha1; i <= KeyCode.Alpha9; i++)

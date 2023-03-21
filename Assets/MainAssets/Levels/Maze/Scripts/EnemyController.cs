@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -20,6 +21,8 @@ public class EnemyController : MonoBehaviour
     
     public bool debugNavigation;
     public Transform debugTarget;
+
+    private MazeSectionPos mazeSection = MazeSectionPos.Middle;
     
     // todo the lighting... I think the right call for making the lighting work is going to be grid-ifying the maze
     // todo  and using x depth neighbor checks every time we cross a tile boundary. Honestly not that expensive just
@@ -38,7 +41,7 @@ public class EnemyController : MonoBehaviour
     // private float timeSinceRefresh;
     // private bool valid, firstValid;
     
-    private float distCache;
+    // private float distCache;
     
     // private readonly float gameOverDistance = 5f;
     
@@ -64,6 +67,18 @@ public class EnemyController : MonoBehaviour
     
     private void Update()
     {
+        // calc current maze section
+        Vector3 curPos = transform.position;
+        int xPos = Mathf.FloorToInt(curPos.x) / 8 / 3;
+        int zPos = Mathf.FloorToInt(curPos.z) / 8 / 3;
+        MazeSectionPos section = (MazeSectionPos) (xPos * 3 + zPos);
+        if (section != mazeSection)
+        {
+            mazeSection = section;
+            PhotonPacket.MAZE_ENEMY.Value = (int) section;
+            print("Enemy in section "+Enum.GetName(typeof(MazeSectionPos), section));
+        }
+        
         /*timeSinceRefresh += Time.deltaTime;
         
         if (navAgent.pathStatus != NavMeshPathStatus.PathComplete)
