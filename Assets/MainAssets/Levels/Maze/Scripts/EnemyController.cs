@@ -22,6 +22,8 @@ public class EnemyController : MonoBehaviour
     public bool debugNavigation;
     public Transform debugTarget;
 
+    private static readonly int dimension = 464 / 8;
+
     private MazeSectionPos mazeSection = MazeSectionPos.Middle;
     
     // todo the lighting... I think the right call for making the lighting work is going to be grid-ifying the maze
@@ -69,9 +71,11 @@ public class EnemyController : MonoBehaviour
     {
         // calc current maze section
         Vector3 curPos = transform.position;
-        int xPos = Mathf.FloorToInt(curPos.x) / 8 / 3;
-        int zPos = Mathf.FloorToInt(curPos.z) / 8 / 3;
-        MazeSectionPos section = (MazeSectionPos) (xPos * 3 + zPos);
+        int xPos = Mathf.Clamp(Mathf.FloorToInt(curPos.x / 8 / (dimension / 3f)), 0, 2);
+        int zPos = Mathf.Clamp(Mathf.FloorToInt(curPos.z / 8 / (dimension / 3f)), 0, 2);
+        int sectionInt = (xPos * 3 + zPos);
+        MazeSectionPos section = (MazeSectionPos) sectionInt;
+        // print($"current maze pos: {sectionInt}; xPos {xPos} zPos {zPos}");
         if (section != mazeSection)
         {
             mazeSection = section;

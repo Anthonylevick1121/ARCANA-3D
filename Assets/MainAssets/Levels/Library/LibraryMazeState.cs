@@ -81,9 +81,11 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         }
         
         // just disable this for now
-        if (false && PhotonPacket.MAZE_ENEMY.WasChanged(deltaProps))
+        if (PhotonPacket.MAZE_ENEMY.WasChanged(deltaProps))
         {
             int idx = PhotonPacket.MAZE_ENEMY.Get(deltaProps);
+            print("library received enemy pos "+idx);
+            
             // light the torch in old section
             mapLit.GetChild(enemyPos).gameObject.SetActive(true);
             mapUnlit.GetChild(enemyPos).gameObject.SetActive(false);
