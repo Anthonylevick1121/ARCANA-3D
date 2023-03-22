@@ -43,9 +43,13 @@ public static class PhotonPacket
     public static readonly PhotonPacketType<bool> POTION_WIN = new ();
     
     // separated because fricc photon
+    // only one needed now because only one flip
     public static readonly PhotonPacketType<int> MAZE_LEVER = new ();
-    public static readonly PhotonPacketType<bool> MAZE_LEVER_FLIP = new ();
-    public static readonly PhotonPacketType<bool> MAZE_LEVER_ACTION = new ();
+    // public static readonly PhotonPacketType<bool> MAZE_LEVER_FLIP = new ();
+    // public static readonly PhotonPacketType<bool> MAZE_LEVER_ACTION = new ();
+    
+    // player entered this section of maze
+    public static readonly PhotonPacketType<int> MAZE_PLAYER = new ();
     
     public static readonly PhotonPacketType<int> MAZE_ENEMY = new ();
     public static readonly PhotonPacketType<bool> MAZE_WIN = new ();

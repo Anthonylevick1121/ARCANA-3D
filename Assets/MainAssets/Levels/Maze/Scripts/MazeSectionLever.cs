@@ -11,7 +11,7 @@ public class MazeSectionLever : Interactable
     private Transform parent;
     private bool flipped;
     
-    public override string GetPrompt(HoldableItem item) => "Flip Lever";
+    public override string GetPrompt(HoldableItem item) => flipped ? "" : "Flip Lever";
     
     // Start is called before the first frame update
     protected override void Start()
@@ -25,6 +25,8 @@ public class MazeSectionLever : Interactable
     
     protected override bool Interact(PlayerCore player, HoldableItem heldItem)
     {
+        if (flipped) return false;
+        
         // toggle torches and walls
         for (int i = 0; i <= 4; i++)
         {
@@ -52,11 +54,11 @@ public class MazeSectionLever : Interactable
         
         // send to librarian (should only send on first but it'll just ignore if already sent)
         PhotonPacket.MAZE_LEVER.Value = (int) mazeSection;
-        PhotonPacket.MAZE_LEVER_FLIP.Value = flipped;
-        if(PhotonNetwork.IsConnected) PhotonNetwork.SendAllOutgoingCommands();
-        PhotonPacket.MAZE_LEVER_ACTION.Value = true;
-        if(PhotonNetwork.IsConnected) PhotonNetwork.SendAllOutgoingCommands();
-        PhotonPacket.MAZE_LEVER_ACTION.Value = false;
+        // PhotonPacket.MAZE_LEVER_FLIP.Value = flipped;
+        // if(PhotonNetwork.IsConnected) PhotonNetwork.SendAllOutgoingCommands();
+        // PhotonPacket.MAZE_LEVER_ACTION.Value = true;
+        // if(PhotonNetwork.IsConnected) PhotonNetwork.SendAllOutgoingCommands();
+        // PhotonPacket.MAZE_LEVER_ACTION.Value = false;
         
         return true;
     }
