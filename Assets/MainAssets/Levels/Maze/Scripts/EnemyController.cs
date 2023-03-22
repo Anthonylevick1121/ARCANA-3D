@@ -1,8 +1,6 @@
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
@@ -22,16 +20,8 @@ public class EnemyController : MonoBehaviour
     
     public bool debugNavigation;
     public Transform debugTarget;
-
-    private static readonly int dimension = 464 / 8;
-
-    private MazeSectionPos mazeSection = MazeSectionPos.Middle;
     
-    // todo the lighting... I think the right call for making the lighting work is going to be grid-ifying the maze
-    // todo  and using x depth neighbor checks every time we cross a tile boundary. Honestly not that expensive just
-    // todo  takes a bit of processing upfront.
-    
-    // todo JK - actually, look at raycasts! Can cast forward and down to find things!
+    private MazeSectionPos mazeSection = MazeSectionPos.Tutorial; // not the case, but not tracked, and it'll cause an update
     
     // just going to refresh every frame for now, doesn't seem to be that bad lol
     
@@ -71,12 +61,7 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         // calc current maze section
-        Vector3 curPos = transform.position;
-        int xPos = Mathf.Clamp(Mathf.FloorToInt(curPos.x / 8 / (dimension / 3f)), 0, 2);
-        int zPos = Mathf.Clamp(Mathf.FloorToInt(curPos.z / 8 / (dimension / 3f)), 0, 2);
-        int sectionInt = (xPos * 3 + zPos);
-        MazeSectionPos section = (MazeSectionPos) sectionInt;
-        // print($"current maze pos: {sectionInt}; xPos {xPos} zPos {zPos}");
+        MazeSectionPos section = MazePuzzle.instance.GetMazeSection(transform.position);
         if (section != mazeSection)
         {
             mazeSection = section;

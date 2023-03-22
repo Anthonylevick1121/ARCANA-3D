@@ -28,15 +28,14 @@ public class MazeSectionLever : Interactable
         if (flipped) return false;
         
         // toggle torches and walls
-        for (int i = 0; i <= 4; i++)
-        {
-            GameObject obj = parent.GetChild(i+2).gameObject;
-            obj.SetActive(!obj.activeSelf);
-        }
+        // for (int i = 0; i <= 4; i++)
+        // {
+            // GameObject obj = parent.GetChild(i+2).gameObject;
+            // obj.SetActive(!obj.activeSelf);
+        // }
         
         // tell the main puzzle, so it knows when all have been flipped later
-        if(mazeSection != MazeSectionPos.Tutorial)
-            MazePuzzle.instance.TouchLever(mazeSection);
+        MazePuzzle.instance.TouchLever(mazeSection);
         
         // rendering update
         flipped = !flipped;
@@ -44,7 +43,12 @@ public class MazeSectionLever : Interactable
         // renderer.material = flipped ? flipMat : startMat;
         
         // temp notification
-        string mainStatus = "Sounds echo through the maze...\nThe passages have changed.";
+        // string mainStatus = "Sounds echo through the maze...\nThe passages have changed.";
+        string mainStatus = "Lever Flipped!\n";
+        if (mazeSection == MazeSectionPos.Tutorial)
+            mainStatus += "A door creaks open...";
+        else
+            mainStatus += "More magic flows to the center of the maze...";
         
         string name = System.Enum.GetName(typeof(MazeSectionPos), mazeSection);
         string msg = $"(lever {name} turned to state {(flipped ? "on" : "off")})";

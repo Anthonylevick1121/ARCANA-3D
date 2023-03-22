@@ -418,6 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  sprintMultiplier: 2
   jumpHeight: 0.6
   footstepPlayer: {fileID: 383054578102016828}
   walkAudio: {fileID: 8300000, guid: a9b1a7174a6a09249970794eb74d34f6, type: 3}

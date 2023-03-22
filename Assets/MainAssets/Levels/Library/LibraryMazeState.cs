@@ -16,6 +16,10 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
     [SerializeField] private Color standardMapColor; // lever not flipped
     [SerializeField] private Color completedMapColor; // lever flipped
     [SerializeField] private Color playerSectionColor; // player in section
+    
+    private Renderer[] mapSymbols;
+    [SerializeField] private Material mapSymbolMat; // player in section
+    [SerializeField] private Material mapSymbolEnemyMat; // player in section
     // enemy section is emissive
     
     // private GameObject[] defaultOpenSymbolBacks;
@@ -40,10 +44,22 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             // defaultOpenSymbolBacks[i] = mazeSymbols.GetChild(i).Find("Circle").gameObject;
             // defaultClosedSymbolBacks[i] = mazeSymbols.GetChild(i).Find("Triangle").gameObject;
         // }
-        foreach (Renderer r in mapSections)
+        mapSymbols = new Renderer[mapSections.Length];
+        for(int i = 0; i < mapSections.Length; i++)
         {
-            r.material.color = standardMapColor;
-            r.material.DisableKeyword("_EMISSIVE");
+            // color the cover symbol
+            mapSymbols[i] = mapCovers[i].transform.GetChild(0).GetComponentInChildren<Renderer>();
+            mapSymbols[i].material = mapSymbolMat;
+            // color the map sections
+            mapSections[i].material.color = standardMapColor;
+            mapSections[i].material.DisableKeyword("_EMISSIVE");
+        }
+        
+        // debug?
+        if (!PhotonNetwork.IsConnected)
+        {
+            OnRoomPropertiesUpdate(PhotonPacket.MAZE_ENEMY.Mock(4));
+            OnRoomPropertiesUpdate(PhotonPacket.MAZE_PLAYER.Mock(9));
         }
     }
     
@@ -72,7 +88,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         }
         
         if (colorPlayer >= 0)
-            OnRoomPropertiesUpdate(new Hashtable {{PhotonPacket.MAZE_PLAYER.key, colorPlayer}});
+            OnRoomPropertiesUpdate(new Hashtable { { PhotonPacket.MAZE_PLAYER.key, colorPlayer } });
         if (colorLever >= 0)
             OnRoomPropertiesUpdate(new Hashtable { { PhotonPacket.MAZE_LEVER.key, colorLever } });
     }
@@ -102,13 +118,18 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
+        // print("room property updates for "+deltaProps.ToString());
+        
         if (PhotonPacket.MAZE_LEVER.WasChanged(deltaProps))
         {
             // OnLeverFlip((MazeSectionPos) PhotonPacket.MAZE_LEVER.Value, PhotonPacket.MAZE_LEVER_FLIP.Value);
             int idx = PhotonPacket.MAZE_LEVER.Get(deltaProps);
             print("maze lever flip: "+idx);
             levers[idx] = true;
-            library.statusText.SetStatus("Lever Flipped!\nMore magic flows to the center of the maze...");
+            if(idx == (int) MazeSectionPos.Tutorial)
+                library.statusText.SetStatus("Lever Flipped!\nA door opens... guide well.");
+            else
+                library.statusText.SetStatus("Lever Flipped!\nMore magic flows to the ritual circle...");
             UpdateSectionColor(idx);
         }
         
@@ -131,10 +152,17 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             int idx = PhotonPacket.MAZE_ENEMY.Get(deltaProps);
             print("library received enemy pos "+idx);
             
-            // emission tracking
-            if(enemySection >= 0)
+            // emission tracking on map and cover
+            if (enemySection >= 0)
+            {
                 mapSections[enemySection].material.DisableKeyword("_EMISSION");
+                mapSymbols[enemySection].material = mapSymbolMat;
+            }
+            
             mapSections[idx].material.EnableKeyword("_EMISSION");
+            mapSymbols[idx].material = mapSymbolEnemyMat;
+            
+            // also do the cover in case it's an unknown section
             
             // light the torch in old section
             // mapLit.GetChild(enemyPos).gameObject.SetActive(true);
@@ -146,7 +174,9 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             enemySection = idx;
         }
         
-        if (PhotonPacket.MAZE_WIN.WasChanged(deltaProps))
+        if (PhotonPacket.MAZE_WIN.GetOr(deltaProps, false))
+        {
             library.statusText.SetStatus("Ritual Circle activated!\nYou saved the arch mage.");
+        }
     }
 }
