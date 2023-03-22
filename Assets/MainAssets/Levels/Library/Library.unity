@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731704, g: 0.13414727, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10445,6 +10445,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 510068735656756695, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1200927453735983090, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2082923180206651027, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2369157133438390877, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221464155866508663, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5624780623076435113, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
       propertyPath: m_LocalPosition.x
       value: -13.33
@@ -10460,6 +10480,14 @@ PrefabInstance:
     - target: {fileID: 6684715482813941274, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
       propertyPath: m_Name
       value: PlayerRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 6810583215628351414, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243025633697511299, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7749311485657328806, guid: 4c413e38a6e357b46be13b856ff63a35, type: 3}
       propertyPath: m_Name
