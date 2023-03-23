@@ -70,6 +70,9 @@ public class PotionPuzzle : MonoBehaviour
     // runtime, player-driven action data
     private readonly List<int> placedIngredients = new ();
     
+    // debug bool
+    private bool solutionRevealed = false;
+    
     private void Awake() => instance = this;
     
     // Start is called before the first frame update
@@ -138,7 +141,16 @@ public class PotionPuzzle : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
-            debugText.text = solutionText;
+        {
+            if(solutionRevealed)
+                PuzzleWin();
+            else
+            {
+                debugText.text = solutionText;
+                solutionRevealed = true;
+            }
+        }
+        
         if (Input.GetKeyDown(KeyCode.L))
             debugText.gameObject.SetActive(!debugText.gameObject.activeSelf);
         if (Input.GetKeyDown(KeyCode.Y))
@@ -173,15 +185,18 @@ public class PotionPuzzle : MonoBehaviour
             correct = correctIngredients[i] == placedIngredients[i];
 
         if (correct)
-        {
-            statusText.SetStatus("You got the right potion! Yay!");
-            PhotonPacket.POTION_WIN.Value = true;
-        }
+            PuzzleWin();
         else
             statusText.SetStatus("That was the wrong potion... you feel sick...");
         
         placedIngredients.Clear();
         
         return true;
+    }
+    
+    private void PuzzleWin()
+    {
+        statusText.SetStatus("You got the right potion! Yay!");
+        PhotonPacket.POTION_WIN.Value = true;
     }
 }
