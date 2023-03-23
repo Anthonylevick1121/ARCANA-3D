@@ -5,7 +5,10 @@ public class LibraryState : MonoBehaviour
 {
     [SerializeField] public StatusTextListener statusText;
     [SerializeField] public TextMeshProUGUI debugText;
-
+    
+    [SerializeField] private PlayerCore player;
+    [SerializeField] private GameObject winScreen, loseScreen;
+    
     public bool debug = false;
     
     // Start is called before the first frame update
@@ -23,4 +26,6 @@ public class LibraryState : MonoBehaviour
             debugText.gameObject.SetActive(debug);
         }
     }
+    
+    // todo function to show win/loss screen
 }

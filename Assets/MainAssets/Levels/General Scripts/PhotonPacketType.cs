@@ -21,12 +21,8 @@ public sealed class PhotonPacketType<T>
     
     public T Value
     {
-        get => (T) PhotonNetwork.CurrentRoom?.CustomProperties[key];
-        set
-        {
-            // Debug.Log($"setting packet type {key} named {}");
-            PhotonNetwork.CurrentRoom?.SetCustomProperties(new Hashtable { { key, value } });
-        }
+        get => (T) (PhotonNetwork.CurrentRoom?.CustomProperties[key] ?? default(T));
+        set => PhotonNetwork.CurrentRoom?.SetCustomProperties(new Hashtable { { key, value } });
     }
     
     public Hashtable Mock(T value) => new() { { key, value } };
@@ -52,15 +48,16 @@ public static class PhotonPacket
     public static readonly PhotonPacketType<int> POTION_SYMBOL = new ("potion symbol");
     public static readonly PhotonPacketType<bool> POTION_WIN = new ("potion win");
     
-    // separated because fricc photon
-    // only one needed now because only one flip
+    // denotes when the other has entered their area, used to sync the voice lines / intro
+    public static readonly PhotonPacketType<bool> MAZE_PLAYER_ENTER = new ("maze enter player");
+    public static readonly PhotonPacketType<bool> MAZE_LIB_ENTER = new ("maze enter lib");
+    
+    // only one needed now because each will only flip once
     public static readonly PhotonPacketType<int> MAZE_LEVER = new ("maze lever");
-    // public static readonly PhotonPacketType<bool> MAZE_LEVER_FLIP = new ("maze flip");
-    // public static readonly PhotonPacketType<bool> MAZE_LEVER_ACTION = new ("maze flip action");
+    // librarian lever; down or not?
+    public static readonly PhotonPacketType<bool> MAZE_LIB_LEVER = new ("maze lib lever");
     
-    // player entered this section of maze
     public static readonly PhotonPacketType<int> MAZE_PLAYER = new ("maze player");
-    
     public static readonly PhotonPacketType<int> MAZE_ENEMY = new ("maze enemy");
     public static readonly PhotonPacketType<bool> MAZE_WIN = new ("maze win");
     

@@ -15,6 +15,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] public StatusTextListener status;
     [SerializeField] public TextMeshProUGUI debugText;
     
+    // todo field and function for pause screen to do pausing
+    
     private void Start()
     {
         promptText.text = "check";

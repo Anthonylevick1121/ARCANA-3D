@@ -2,79 +2,75 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(LibraryState))]
 public class LibraryMazeState : MonoBehaviourPunCallbacks
 {
     // each of these are expected to have children ordered by the MazeSectionPos enum.
-    // [SerializeField] private Transform mazeSymbols;
-    // [SerializeField] private Transform mapCover;
-    // [SerializeField] private Transform mapLit;
-    // [SerializeField] private Transform mapUnlit;
-    [SerializeField] private GameObject[] mapCovers;
     [SerializeField] private Renderer[] mapSections;
-    [SerializeField] private Color standardMapColor; // lever not flipped
-    [SerializeField] private Color completedMapColor; // lever flipped
-    [SerializeField] private Color playerSectionColor; // player in section
+    [SerializeField] private Material[] mapStateStart;
+    [SerializeField] private Material[] mapStateAlt;
+    [SerializeField] private Material[] mapStateDone;
+    // [SerializeField] private Color completedMapColor;
+    [SerializeField] private Color playerMapColor; // player in section
+    [SerializeField] private Color inactiveMapColor;
     
-    private Renderer[] mapSymbols;
-    [SerializeField] private Material mapSymbolMat; // player in section
+    [SerializeField] private GameObject[] mapCovers;
+    private Renderer[] mapSymbols; // sourced from the covers
+    [SerializeField] private Material mapSymbolBaseMat; // player in section
     [SerializeField] private Material mapSymbolEnemyMat; // player in section
     // enemy section is emissive
     
-    // private GameObject[] defaultOpenSymbolBacks;
-    // private GameObject[] defaultClosedSymbolBacks;
-    // [SerializeField] private Material offSymbolMat, onSymbolMat;
-    
     private LibraryState library;
-    private int enemySection;
+    private int enemySection = -1;
     private int playerSection = -1;
     private bool[] levers;
+    
+    private enum DebugType
+    {
+        PlayerPos, EnemyPos, Lever
+    }
+    private static readonly int DebugTypeCount = Enum.GetValues(typeof(DebugType)).Length;
+    
+    private DebugType debugType = DebugType.PlayerPos;
     
     // Start is called before the first frame update
     private void Start()
     {
         library = GetComponent<LibraryState>();
         levers = new bool[Enum.GetValues(typeof(MazeSectionPos)).Length];
-        // int symbolCount = mazeSymbols.childCount;
-        // defaultOpenSymbolBacks = new GameObject[symbolCount];
-        // defaultClosedSymbolBacks = new GameObject[symbolCount];
-        // for (int i = 0; i < symbolCount; i++)
-        // {
-            // defaultOpenSymbolBacks[i] = mazeSymbols.GetChild(i).Find("Circle").gameObject;
-            // defaultClosedSymbolBacks[i] = mazeSymbols.GetChild(i).Find("Triangle").gameObject;
-        // }
         mapSymbols = new Renderer[mapSections.Length];
         for(int i = 0; i < mapSections.Length; i++)
         {
-            // color the cover symbol
+            // color the cover symbols, those will be seen first
             mapSymbols[i] = mapCovers[i].transform.GetChild(0).GetComponentInChildren<Renderer>();
-            mapSymbols[i].material = mapSymbolMat;
-            // color the map sections
-            mapSections[i].material.color = standardMapColor;
-            mapSections[i].material.DisableKeyword("_EMISSIVE");
+            mapSymbols[i].material = mapSymbolBaseMat;
+            // ensure each section is displaying proper initial state
+            UpdateSectionColor(i);
         }
-        
-        // debug?
-        if (!PhotonNetwork.IsConnected)
-        {
-            OnRoomPropertiesUpdate(PhotonPacket.MAZE_ENEMY.Mock(4));
-            OnRoomPropertiesUpdate(PhotonPacket.MAZE_PLAYER.Mock(9));
-        }
+        library.debugText.text = "Debug mode: " + Enum.GetName(typeof(DebugType), debugType);
     }
     
     private void Update()
     {
         if (!library.debug) return;
         
-        int colorPlayer = -1;
-        int colorLever = -1;
-        // debug press-any-lever
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            // cycle debug type
+            debugType = (DebugType) (((int) debugType + 1) % DebugTypeCount);
+            library.debugText.text = "Debug mode: " + Enum.GetName(typeof(DebugType), debugType);
+        }
+        
+        int section = -1;
+        // debug-send packets relating to diff sections
+        
         for (KeyCode i = KeyCode.Alpha0; i <= KeyCode.Alpha9; i++)
         {
             if (Input.GetKeyDown(i))
             {
-                colorPlayer = i == KeyCode.Alpha0 ? 9 : i - KeyCode.Alpha1;
+                section = i == KeyCode.Alpha0 ? 9 : i - KeyCode.Alpha1;
                 break;
             }
         }
@@ -82,39 +78,46 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         {
             if (Input.GetKeyDown(i))
             {
-                colorLever = i == KeyCode.Keypad0 ? 9 : i - KeyCode.Keypad1;
+                section = i == KeyCode.Keypad0 ? 9 : i - KeyCode.Keypad1;
                 break;
             }
         }
         
-        if (colorPlayer >= 0)
-            OnRoomPropertiesUpdate(new Hashtable { { PhotonPacket.MAZE_PLAYER.key, colorPlayer } });
-        if (colorLever >= 0)
-            OnRoomPropertiesUpdate(new Hashtable { { PhotonPacket.MAZE_LEVER.key, colorLever } });
+        if (section < 0) return;
+        
+        PhotonPacketType<int> packet = debugType switch
+        {
+            DebugType.PlayerPos => PhotonPacket.MAZE_PLAYER,
+            DebugType.EnemyPos => PhotonPacket.MAZE_ENEMY,
+            DebugType.Lever => PhotonPacket.MAZE_LEVER,
+            _ => throw new ArgumentException(debugType.ToString()) // this should never occur
+        };
+        OnRoomPropertiesUpdate(packet.Mock(section));
     }
     
     private void UpdateSectionColor(int section)
     {
-        Color color = section == playerSection ? playerSectionColor : standardMapColor;
-        if (levers[section])
-            color *= completedMapColor;
-        mapSections[section].material.color = color;
+        if (section < 0) return;
+        
+        // could be:
+        // - inactive, or player - color
+        // - enemy or not - emission
+        // - librarian + player lever state - picks material
+        
+        // since it changes the material, first pick material
+        Material targetMat = mapStateStart.Length == 0 ? mapSections[section].material : // small debug addition
+            (levers[section] ? mapStateDone : PhotonPacket.MAZE_LIB_LEVER.Value ? mapStateAlt : mapStateStart)[section];
+        
+        // set emission based on enemy
+        if(enemySection == section) targetMat.EnableKeyword("_EMISSION");
+        else targetMat.DisableKeyword("_EMISSION");
+        
+        // set color based on player
+        targetMat.color = playerSection == section ? playerMapColor : inactiveMapColor;
+        
+        // assign material
+        mapSections[section].material = targetMat;
     }
-    
-    // private void OnLeverFlip(MazeSectionPos pos, bool flipped)
-    // {
-    //     int idx = (int) pos;
-    //     levers[idx] = true;
-    //     mapSections[idx].material.color = completedMapColor;
-    //     library.statusText.SetStatus("Lever Flipped!\nMore magic flows to the center of the maze...");
-    //     
-    //     // set the glow state of the matching symbol
-    //     // mazeSymbols.GetChild(idx).GetComponentInChildren<Renderer>().material = flipped ? onSymbolMat : offSymbolMat;
-    //     // defaultOpenSymbolBacks[idx].SetActive(!flipped);
-    //     // defaultClosedSymbolBacks[idx].SetActive(flipped);
-    //     // ensure map section is unhidden
-    //     // mapCover.GetChild(idx).gameObject.SetActive(false);
-    // }
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
@@ -137,14 +140,13 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         {
             int idx = PhotonPacket.MAZE_PLAYER.Get(deltaProps);
             print("player in section "+idx);
+            // set material color
+            if (playerSection >= 0) mapSections[playerSection].material.color = inactiveMapColor;
+            mapSections[idx].material.color = playerMapColor;
             // uncover
             mapCovers[idx].SetActive(false);
             // save
-            int prevPlayer = playerSection;
             playerSection = idx;
-            // update tracking
-            if(prevPlayer >= 0) UpdateSectionColor(prevPlayer);
-            UpdateSectionColor(idx);
         }
         
         if (PhotonPacket.MAZE_ENEMY.WasChanged(deltaProps))
@@ -156,21 +158,12 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             if (enemySection >= 0)
             {
                 mapSections[enemySection].material.DisableKeyword("_EMISSION");
-                mapSymbols[enemySection].material = mapSymbolMat;
+                mapSymbols[enemySection].material = mapSymbolBaseMat;
             }
             
             mapSections[idx].material.EnableKeyword("_EMISSION");
             mapSymbols[idx].material = mapSymbolEnemyMat;
             
-            // also do the cover in case it's an unknown section
-            
-            // light the torch in old section
-            // mapLit.GetChild(enemyPos).gameObject.SetActive(true);
-            // mapUnlit.GetChild(enemyPos).gameObject.SetActive(false);
-            // unlight the torch in new section
-            // mapUnlit.GetChild(idx).gameObject.SetActive(true);
-            // mapLit.GetChild(idx).gameObject.SetActive(false);
-            // store section id
             enemySection = idx;
         }
         
