@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/MainAssets/MainMenu/Scenes/1_MainMenu.unity
     guid: 7aa0d0326328b3e4eb20fb647fd62635
   - enabled: 1
-    path: Assets/MainAssets/MainMenu/Scenes/2_ServerConnect_Loading.unity
+    path: Assets/MainAssets/MainMenu/Scenes/5_LevlLoad_new.unity
     guid: e1d5cec50be0acc408a1a63827c50b05
   - enabled: 1
     path: Assets/MainAssets/MainMenu/Scenes/3_RoomSelect.unity
