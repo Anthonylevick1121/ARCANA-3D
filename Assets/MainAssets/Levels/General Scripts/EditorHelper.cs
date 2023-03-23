@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 [ExecuteInEditMode]
 public class EditorHelper : MonoBehaviour
@@ -91,6 +90,11 @@ public class EditorHelper : MonoBehaviour
         Add("Zero Transform Relative", ZeroTransformRelative);
         Add("Integer Children Locs", IntegerLocations);
         Add("Clear Overlapping Children", ClearDuplicates);
+        Add("Duplicate and Flip Children", t =>
+        {
+            DuplicateAndMod(t.GetChild(5));
+            DuplicateAndMod(t.GetChild(6));
+        });
     }
     
     private void ClearDuplicates(Transform t)
@@ -108,6 +112,22 @@ public class EditorHelper : MonoBehaviour
             }
         }
         print($"removed {removed} overlapping children.");
+    }
+    
+    private void DuplicateAndMod(Transform t)
+    {
+        // duplicate all children and then flip them 180 deg on y
+        int origCount = t.childCount;
+        for (int i = 0; i < origCount; i++)
+        {
+            GameObject child = t.GetChild(i).gameObject;
+            Selection.activeGameObject = child;
+            Unsupported.CopyGameObjectsToPasteboard();
+            Unsupported.PasteGameObjectsFromPasteboard();
+            Transform dup = Selection.activeTransform;
+            dup.Rotate(Vector3.up, 180, Space.World);
+            dup.Translate(Vector3.up * 0.2f, Space.Self);
+        }
     }
     
     private void IntegerLocations(Transform t)
