@@ -2,6 +2,7 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(LibraryState))]
@@ -26,6 +27,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
     private int enemySection = -1;
     private int playerSection = -1;
     private bool[] levers;
+    private bool librarianLever;
     
     private enum DebugType
     {
@@ -41,6 +43,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         library = GetComponent<LibraryState>();
         levers = new bool[Enum.GetValues(typeof(MazeSectionPos)).Length];
         mapSymbols = new Renderer[mapSections.Length];
+        Assert.AreEqual(levers.Length, mapSections.Length, "A map section is required for every maze position.");
         for(int i = 0; i < mapSections.Length; i++)
         {
             // color the cover symbols, those will be seen first
@@ -106,7 +109,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         
         // since it changes the material, first pick material
         Material targetMat = mapStateStart.Length == 0 ? mapSections[section].material : // small debug addition
-            (levers[section] ? mapStateDone : PhotonPacket.MAZE_LIB_LEVER.Value ? mapStateAlt : mapStateStart)[section];
+            (levers[section] ? mapStateDone : librarianLever ? mapStateAlt : mapStateStart)[section];
         
         // set emission based on enemy
         if(enemySection == section) targetMat.EnableKeyword("_EMISSION");
@@ -125,7 +128,6 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         
         if (PhotonPacket.MAZE_LEVER.WasChanged(deltaProps))
         {
-            // OnLeverFlip((MazeSectionPos) PhotonPacket.MAZE_LEVER.Value, PhotonPacket.MAZE_LEVER_FLIP.Value);
             int idx = PhotonPacket.MAZE_LEVER.Get(deltaProps);
             print("maze lever flip: "+idx);
             levers[idx] = true;
@@ -171,5 +173,14 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         {
             library.statusText.SetStatus("Ritual Circle activated!\nYou saved the arch mage.");
         }
+    }
+    
+    public void OnFlipLibrarianLever(bool flipped)
+    {
+        print("librarian flip! "+flipped);
+        librarianLever = flipped;
+        // trigger an update of all maps
+        for(int i = 0; i < levers.Length; i++)
+            UpdateSectionColor(i);
     }
 }

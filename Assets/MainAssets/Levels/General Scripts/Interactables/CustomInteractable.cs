@@ -3,8 +3,8 @@ using UnityEngine.Events;
 
 public class CustomInteractable : Interactable
 {
-    // [SerializeField]
-    // private string promptMessage;
+    [SerializeField]
+    private string promptMessage;
     
     [SerializeField]
     private UnityEvent<PlayerCore, HoldableItem> onInteract;
@@ -16,5 +16,5 @@ public class CustomInteractable : Interactable
         return onInteract != null;
     }
     
-    // public override string GetPrompt() => promptMessage;
+    public override string GetPrompt(HoldableItem heldItem) => promptMessage;
 }

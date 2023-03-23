@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class HoldableItem : Interactable
+public abstract class HoldableItem : Interactable
 {
     private Rigidbody rbody;
     

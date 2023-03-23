@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 [ExecuteInEditMode]
 public class EditorHelper : MonoBehaviour
@@ -14,7 +15,7 @@ public class EditorHelper : MonoBehaviour
         gameObject.hideFlags |= HideFlags.DontSaveInBuild;
     }
     
-    public Transform moveDest;
+    public Transform secondary;
     
     [NonSerialized]
     private bool created = false;
@@ -22,19 +23,24 @@ public class EditorHelper : MonoBehaviour
     private struct ButtonAction
     {
         public string name;
-        public Action<GameObject> action;
-        public bool needObj;
+        public Action<Transform> action;
+        public Func<Transform, bool> check;
     }
     
     private List<ButtonAction> buttons = new ();
     
-    private void Add(string name, Action<GameObject> action, bool needObj = true)
+    private void Add(string name, Action<Transform> action, Func<Transform, bool> check)
     {
         buttons.Add(new ButtonAction
         {
-            name = name, action = action, needObj = needObj
+            name = name, action = action, check = check ?? (t => t)
         });
     }
+    private void Add(string name, Action<Transform> action, bool needObj = true) =>
+        Add(name, action, t => needObj ? t : true);
+    private void Add(string name, Action<Transform, Transform> action, bool needObj = true, bool needSecondary = true) =>
+        Add(name, t => action.Invoke(t, secondary),
+            t => (!needObj || t) && (!needSecondary || secondary));
     
     private void OnEnable()
     {
@@ -60,15 +66,17 @@ public class EditorHelper : MonoBehaviour
         float yoff = 30;
         float height = 30;
         float ydelta = 40;
-        GameObject obj = Selection.activeGameObject;
+        GameObject[] objs = Selection.gameObjects;
         foreach (ButtonAction button in buttons)
         {
-            if (button.needObj && !obj) continue;
-            string line = (obj ? obj.name : "null") + " - " + button.name;
+            bool hasSome = objs.Length > 0;
+            bool hasMany = objs.Length > 1;
+            if (!button.check(hasSome ? Selection.activeGameObject.transform : null)) continue;
+            string line = (hasMany ? $"{objs.Length} Objects" : hasSome ? objs[0].name : "null") + " - " + button.name;
             if (GUI.Button(new Rect(xoff, yoff, line.Length * 8, height), line))
             {
-                if(!obj) button.action.Invoke(null);
-                else foreach(GameObject eachobj in Selection.gameObjects) button.action.Invoke(eachobj);
+                if(!hasSome) button.action.Invoke(null);
+                else foreach(GameObject eachobj in objs) button.action.Invoke(eachobj.transform);
             }
             yoff += ydelta;
         }
@@ -76,17 +84,17 @@ public class EditorHelper : MonoBehaviour
     
     private void Create()
     {
-        Add("Add Components", AddComponents);
-        Add("Move GameObjects", MoveGameObjects);
+        // Add("Add Components", AddComponents);
         Add("Count Children", obj => print("children: "+obj.transform.childCount));
+        Add("Move Children", MoveChildren);
         Add("Zero Transform", ZeroTransform);
+        Add("Zero Transform Relative", ZeroTransformRelative);
         Add("Integer Children Locs", IntegerLocations);
         Add("Clear Overlapping Children", ClearDuplicates);
     }
-
-    private void ClearDuplicates(GameObject obj)
+    
+    private void ClearDuplicates(Transform t)
     {
-        Transform t = obj.transform;
         HashSet<Vector3> positions = new ();
         int removed = 0;
         for (int i = 0; i < t.childCount; i++)
@@ -102,9 +110,8 @@ public class EditorHelper : MonoBehaviour
         print($"removed {removed} overlapping children.");
     }
     
-    private void IntegerLocations(GameObject obj)
+    private void IntegerLocations(Transform t)
     {
-        Transform t = obj.transform;
         for (int i = 0; i < t.childCount; i++)
         {
             Transform child = t.GetChild(i);
@@ -116,49 +123,60 @@ public class EditorHelper : MonoBehaviour
         }
     }
     
-    private void ZeroTransform(GameObject obj)
+    private void ZeroTransform(Transform t)
     {
-        if (obj == gameObject || obj.IsPrefabInstance())
+        if (t.gameObject == gameObject || t.gameObject.IsPrefabInstance())
         {
             print("Not allowed for this object.");
             return;
         }
-        Transform save = moveDest;
-        moveDest = transform;
-        MoveGameObjects(obj);
-        obj.transform.localPosition = Vector3.zero;
-        moveDest = obj.transform;
-        MoveGameObjects(gameObject);
-        moveDest = save;
+        MoveChildren(t, transform);
+        t.localPosition = Vector3.zero;
+        MoveChildren(transform, t);
     }
     
-    private void MoveGameObjects(GameObject obj)
+    private void ZeroTransformRelative(Transform t, Transform relativeTo)
     {
-        Transform t = obj.transform;
+        if (t.gameObject == gameObject || t.gameObject == relativeTo.gameObject || t.gameObject.IsPrefabInstance())
+        {
+            print("Not allowed for this object.");
+            return;
+        }
+        MoveChildren(t, transform);
+        int idx = t.GetSiblingIndex();
+        Transform original = t.parent;
+        t.SetParent(relativeTo);
+        t.localPosition = Vector3.zero;
+        t.localRotation = Quaternion.identity;
+        t.SetParent(original);
+        t.SetSiblingIndex(idx);
+        MoveChildren(transform, t);
+    }
+    
+    private void MoveChildren(Transform t, Transform target)
+    {
+        if (t.gameObject == target.gameObject || t.gameObject.IsPrefabInstance())
+        {
+            print($"Not allowed to move children from {t.name} to {target.name}.");
+            return;
+        }
+        
         print($"Checking to move {t.childCount} children");
         int moved = 0;
         for (int i = 0; i < t.childCount; i++)
         {
-            Transform child = t.GetChild(i);
-            // if(i % 100 == 0) print(child.gameObject.name);
-            // if(child.gameObject.name == "FloorTile (1906)") print("rotation: "+child.rotation);
-            // if(child.gameObject.name.Equals("FloorTIle (1906)")) print("rotation: "+child.localRotation.eulerAngles);
-            // if(child.gameObject.name.Equals("FloorTIle (1906)")) print("pos: "+child.localPosition);
-            // if (Math.Abs(child.localPosition.y - 8) < 0.01f)
-            {
-                child.SetParent(moveDest);
-                i--;
-                moved++;
-            }
+            t.GetChild(i).SetParent(target);
+            i--;
+            moved++;
         }
         print($"moved {moved} children");
     }
     
-    private void AddComponents(GameObject obj)
+    private void AddComponents(Transform t)
     {
-        for (int i = 0; i < obj.transform.childCount; i++)
+        for (int i = 0; i < t.childCount; i++)
         {
-            Transform color = obj.transform.GetChild(i);
+            Transform color = t.GetChild(i);
             for (int j = 3; j <= 4; j++)
             {
                 Transform wallParent = color.GetChild(j);

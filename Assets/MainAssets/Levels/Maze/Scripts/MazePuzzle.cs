@@ -1,7 +1,8 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class MazePuzzle : MonoBehaviour
+public class MazePuzzle : MonoBehaviourPunCallbacks
 {
     public static MazePuzzle instance;
     private void Awake() => instance = this;
@@ -103,6 +104,17 @@ public class MazePuzzle : MonoBehaviour
         {
             corridorParents[color].transform.GetChild(1).GetComponent<MazeSectionLever>()
                 .BaseInteract(player, null);
+        }
+    }
+    
+    public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
+    {
+        if (PhotonPacket.MAZE_LIB_LEVER.WasChanged(deltaProps))
+        {
+            bool flipped = PhotonPacket.MAZE_LIB_LEVER.Get(deltaProps);
+            print("Librarian lever was flipped! "+flipped);
+            
+            // todo toggle various different walls
         }
     }
 }

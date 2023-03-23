@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
 {
-    [SerializeField] private string promptMessage;
+    // [SerializeField] private string promptMessage;
     [HideInInspector] protected new AudioSource audio;
     [SerializeField] private AudioClip interactionSound;
     
@@ -18,8 +18,8 @@ public abstract class Interactable : MonoBehaviour
         if(Interact(player, heldItem) && interactionSound != null)
             audio.PlayOneShot(interactionSound);
     }
-
+    
     protected abstract bool Interact( PlayerCore player, [CanBeNull] HoldableItem heldItem);
     
-    public virtual string GetPrompt(HoldableItem heldItem) => promptMessage;
+    public abstract string GetPrompt([CanBeNull] HoldableItem heldItem);
 }
