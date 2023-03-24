@@ -17,6 +17,8 @@ public class PlayerCore : MonoBehaviour
     
     public PlayerActionMap.PlayerActionsActions InputActions { get; private set; }
     
+    public bool debug = false;
+    
     private void Awake()
     {
         PlayerActionMap input = new ();
@@ -30,6 +32,15 @@ public class PlayerCore : MonoBehaviour
         view = GetComponent<PlayerCamera>();
         interaction = GetComponent<PlayerInteraction>();
         // audio = GetComponent<AudioSource>();
+    }
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            debug = !debug;
+            ui.debugText.gameObject.SetActive(debug);
+        }
     }
     
     private void OnEnable()

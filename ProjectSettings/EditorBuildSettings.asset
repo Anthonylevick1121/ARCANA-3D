@@ -6,20 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MainAssets/MainMenu/Scenes/1_MainMenu.unity
+    path: Assets/MainAssets/Menus/Scenes/1_MainMenu.unity
     guid: 7aa0d0326328b3e4eb20fb647fd62635
   - enabled: 1
-    path: Assets/MainAssets/MainMenu/Scenes/2_ServerConnect_Loading.unity
+    path: Assets/MainAssets/Menus/Scenes/2_ServerConnect.unity
     guid: 9de67999e794a244198cd70c6ff05474
   - enabled: 1
-    path: Assets/MainAssets/MainMenu/Scenes/3_RoomSelect.unity
+    path: Assets/MainAssets/Menus/Scenes/3_RoomSelect.unity
     guid: b509ba95997593b49a2f2b3cb30ffc14
   - enabled: 1
-    path: Assets/MainAssets/MainMenu/Scenes/4_RoomLobby.unity
+    path: Assets/MainAssets/Menus/Scenes/4_RoomLobby.unity
     guid: 1cc48b8a6a4cdbe4d87b34cda80686a5
-  - enabled: 1
-    path: Assets/MainAssets/MainMenu/Scenes/5_LevelLoad.unity
-    guid: 7942bb146dcec194bab152341916221d
   - enabled: 1
     path: Assets/MainAssets/Levels/Library/Library.unity
     guid: 8898d59f5e7180545936fe05169a9c6e
@@ -29,4 +26,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MainAssets/Levels/Maze/Maze.unity
     guid: 456848cc8641828439d6ce1baee77c19
+  - enabled: 1
+    path: Assets/MainAssets/Menus/Scenes/CreditsPage.unity
+    guid: ac9ce78a78c81444696102a9e5f6787e
+  - enabled: 1
+    path: Assets/MainAssets/Menus/Scenes/LossScene.unity
+    guid: e232e7e77d1b14a7f84e4ba17ec13eb5
+  - enabled: 1
+    path: Assets/MainAssets/Menus/Scenes/WinScene.unity
+    guid: c6f77e764b69a488ea7a5daad3888435
   m_configObjects: {}

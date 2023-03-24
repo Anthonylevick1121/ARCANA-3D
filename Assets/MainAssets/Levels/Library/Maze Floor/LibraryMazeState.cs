@@ -168,11 +168,6 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             
             enemySection = idx;
         }
-        
-        if (PhotonPacket.MAZE_WIN.GetOr(deltaProps, false))
-        {
-            library.statusText.SetStatus("Ritual Circle activated!\nYou saved the arch mage.");
-        }
     }
     
     public void OnFlipLibrarianLever(bool flipped)

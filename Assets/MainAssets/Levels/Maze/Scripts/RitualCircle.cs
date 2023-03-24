@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class RitualCircle : Interactable
 {
     public override string GetPrompt(HoldableItem heldItem) => "Activate Ritual Circle";
@@ -7,7 +9,9 @@ public class RitualCircle : Interactable
         if (MazePuzzle.instance.CheckWinnable())
         {
             player.ui.status.SetStatus("Ritual Circle Activated!\nThe arch mage has been saved.");
-            PhotonPacket.MAZE_WIN.Value = true;
+            PhotonPacket.GAME_WIN.Value = true;
+            PhotonPacket.GAME_END.Value = true;
+            ScreenFade.instance.LoadSceneWithFade("Win Screen", Color.white, false);
         }
         else
         {

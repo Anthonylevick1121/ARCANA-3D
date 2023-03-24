@@ -7,7 +7,7 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     public static MazePuzzle instance;
     private void Awake() => instance = this;
     
-    [HideInInspector] public bool debug = false;
+    public bool debug => player.debug;
     
     [SerializeField] public PlayerCore player;
     [SerializeField] public EnemyController enemy;
@@ -76,9 +76,6 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-            debug = !debug;
-        
         if (!debug) return;
         
         int color = -1;

@@ -1,15 +1,16 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-public class LibraryState : MonoBehaviour
+public class LibraryState : MonoBehaviourPunCallbacks
 {
-    [SerializeField] public StatusTextListener statusText;
-    [SerializeField] public TextMeshProUGUI debugText;
-    
     [SerializeField] private PlayerCore player;
     [SerializeField] private GameObject winScreen, loseScreen;
     
-    public bool debug = false;
+    public bool debug => player.debug;
+    public StatusTextListener statusText => player.ui.status;
+    public TextMeshProUGUI debugText => player.ui.debugText;
     
     // Start is called before the first frame update
     private void Start()
@@ -18,14 +19,21 @@ public class LibraryState : MonoBehaviour
         debugText.gameObject.SetActive(debug);
     }
     
-    private void Update()
+    public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (PhotonPacket.GAME_END.GetOr(deltaProps, false))
         {
-            debug = !debug;
-            debugText.gameObject.SetActive(debug);
+            bool win = PhotonPacket.GAME_WIN.Get(deltaProps);
+            // statusText.SetStatus("Ritual Circle activated!\nYou saved the arch mage.");
+            // disable input and other text
+            player.InputActions.Disable();
+            // I'll make a func for this later
+            player.ui.promptText.gameObject.SetActive(false);
+            player.ui.status.gameObject.SetActive(false);
+            player.ui.debugText.gameObject.SetActive(false);
+            
+            PhotonNetwork.LeaveRoom();
+            (win ? winScreen : loseScreen).SetActive(true);
         }
     }
-    
-    // todo function to show win/loss screen
 }

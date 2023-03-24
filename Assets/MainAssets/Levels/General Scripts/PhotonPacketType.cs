@@ -1,8 +1,6 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using System.Collections.Generic;
-using System.Threading;
-using UnityEngine;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public sealed class PhotonPacketType<T>
 {
@@ -59,7 +57,11 @@ public static class PhotonPacket
     
     public static readonly PhotonPacketType<int> MAZE_PLAYER = new ("maze player");
     public static readonly PhotonPacketType<int> MAZE_ENEMY = new ("maze enemy");
-    public static readonly PhotonPacketType<bool> MAZE_WIN = new ("maze win");
+    
+    // final win/loss conditions
+    public static readonly PhotonPacketType<bool> GAME_END = new ("game end");
+    // bool is important, denotes win or loss
+    public static readonly PhotonPacketType<bool> GAME_WIN = new ("game win");
     
     public static Hashtable WithPacket<T>(this Hashtable table, PhotonPacketType<T> packet, T value)
     {
