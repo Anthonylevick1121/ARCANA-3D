@@ -14,13 +14,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] public TextMeshProUGUI promptText;
     [SerializeField] public StatusTextListener status;
     [SerializeField] public TextMeshProUGUI debugText;
-    
-    // todo field and function for pause screen to do pausing
-    
-    private void Start()
-    {
-        promptText.text = "check";
-    }
+    [SerializeField] public Canvas hudCanvas;
+    [SerializeField] public PauseMenuLogic pauseMenu;
     
     // Update is called once per frame
     public void UpdateText(string promptMessage)

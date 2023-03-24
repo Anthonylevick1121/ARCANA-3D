@@ -3,23 +3,43 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(Animator))]
 public class ScreenFade : MonoBehaviour
 {
-    public static ScreenFade instance;
+    private static ScreenFade inst;
+    public static ScreenFade instance
+    {
+        #if UNITY_EDITOR
+        get
+        {
+            if (inst) return inst;
+            // statically load into inst
+            GameObject obj = (GameObject) PrefabUtility.InstantiatePrefab(
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/MainAssets/Menus/Screen Fade Overlay.prefab"));
+            inst = obj.GetComponent<ScreenFade>();
+            inst.Start();
+            DontDestroyOnLoad(obj);
+            return inst;
+        }
+        #else
+        get => inst;
+        #endif
+    }
     
     private void Awake()
     {
-        if (instance != null)
+        if (inst != null)
         {
-            Destroy(gameObject);
+            if(inst != this) Destroy(gameObject);
             return;
         }
         
-        instance = this;
+        inst = this;
         DontDestroyOnLoad(gameObject);
     }
     
@@ -85,7 +105,7 @@ public class ScreenFade : MonoBehaviour
     private IEnumerator LoadScene(string scene)
     {
         // async load the next level
-        PhotonNetwork.SendAllOutgoingCommands();
+        if(PhotonNetwork.IsConnected) PhotonNetwork.SendAllOutgoingCommands();
         yield return null;
         PhotonNetwork.LoadLevel(scene);
         yield return new WaitUntil(() => PhotonNetwork.LevelLoadingProgress >= 1f);
@@ -97,9 +117,9 @@ public class ScreenFade : MonoBehaviour
     {
         FadeScreen(() => StartCoroutine(LoadScene(scene)), fadeBack, showLoadingText, false);
     }
-    public void LoadSceneWithFade(string scene, bool showLoadingText = true) =>
+    public void LoadSceneWithFade(string scene, bool showLoadingText) =>
         LoadSceneWithFade(scene, false, showLoadingText);
-    public void LoadSceneWithFade(string scene, Color initialFadeColor, bool showLoadingText = true)
+    public void LoadSceneWithFade(string scene, Color initialFadeColor, bool showLoadingText)
     {
         backCover.color = initialFadeColor;
         LoadSceneWithFade(scene, true, showLoadingText);

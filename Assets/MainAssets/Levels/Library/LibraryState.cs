@@ -19,20 +19,18 @@ public class LibraryState : MonoBehaviourPunCallbacks
         debugText.gameObject.SetActive(debug);
     }
     
+    public void EndCredits() => ScreenFade.instance.LoadSceneWithFade("CreditsPage", false);
+    
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
-        if (PhotonPacket.GAME_END.GetOr(deltaProps, false))
+        if (PhotonPacket.GAME_WIN.WasChanged(deltaProps))
         {
             bool win = PhotonPacket.GAME_WIN.Get(deltaProps);
             // statusText.SetStatus("Ritual Circle activated!\nYou saved the arch mage.");
             // disable input and other text
-            player.InputActions.Disable();
-            // I'll make a func for this later
-            player.ui.promptText.gameObject.SetActive(false);
-            player.ui.status.gameObject.SetActive(false);
-            player.ui.debugText.gameObject.SetActive(false);
+            player.ToggleGameInput(false);
             
-            PhotonNetwork.LeaveRoom();
+            if(PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
             (win ? winScreen : loseScreen).SetActive(true);
         }
     }

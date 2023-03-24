@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(PlayerCamera))]
 [RequireComponent(typeof(PlayerInteraction))]
-// [RequireComponent(typeof(AudioSource))]
 public class PlayerCore : MonoBehaviour
 {
     // might add more to this later, for now it holds the input map and requires all the other player components
@@ -13,7 +12,6 @@ public class PlayerCore : MonoBehaviour
     [HideInInspector] public PlayerMovement movement;
     [HideInInspector] public PlayerCamera view;
     [HideInInspector] public PlayerInteraction interaction;
-    // [HideInInspector] public new AudioSource audio;
     
     public PlayerActionMap.PlayerActionsActions InputActions { get; private set; }
     
@@ -31,25 +29,35 @@ public class PlayerCore : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
         view = GetComponent<PlayerCamera>();
         interaction = GetComponent<PlayerInteraction>();
-        // audio = GetComponent<AudioSource>();
+        
+        SetDebug(debug);
+    }
+    
+    private void SetDebug(bool debug)
+    {
+        this.debug = debug;
+        ui.debugText.gameObject.SetActive(debug);
+        if (debug && ui.debugText.text.Length == 0)
+            ui.debugText.text = "debug mode on.";
     }
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            debug = !debug;
-            ui.debugText.gameObject.SetActive(debug);
-        }
+        if (Input.GetKeyDown(KeyCode.L)) SetDebug(!debug);
     }
     
-    private void OnEnable()
+    public void ToggleGameInput(bool active)
     {
-        InputActions.Enable();
+        if(active) InputActions.Enable();
+        else InputActions.Disable();
+        
+        ui.hudCanvas.enabled = active;
+        
+        // cursor is on when input is not
+        Cursor.visible = !active;
+        Cursor.lockState = active ? CursorLockMode.Locked : CursorLockMode.None;
     }
     
-    private void OnDisable()
-    {
-        InputActions.Disable();
-    }
+    private void OnEnable() => InputActions.Enable();
+    private void OnDisable() => InputActions.Disable();
 }

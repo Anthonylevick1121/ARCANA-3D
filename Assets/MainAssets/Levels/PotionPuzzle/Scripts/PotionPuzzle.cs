@@ -8,8 +8,7 @@ public class PotionPuzzle : MonoBehaviour
 {
     public static PotionPuzzle instance;
 
-    [SerializeField] public StatusTextListener statusText;
-    [SerializeField] private TextMeshProUGUI debugText;
+    [SerializeField] private PlayerCore player;
     private string solutionText;
     
     [SerializeField] private GameObject toxicEffect;
@@ -70,6 +69,13 @@ public class PotionPuzzle : MonoBehaviour
     // runtime, player-driven action data
     private readonly List<int> placedIngredients = new ();
     
+    private static readonly string[] ATTEMPT_NOTIFS =
+    {
+        "That was the wrong potion... you feel sick...",
+        "Wrong again... one more bad pick and it could all over..."
+    };
+    private int attempts;
+    
     // debug bool
     private bool solutionRevealed = false;
     
@@ -79,6 +85,7 @@ public class PotionPuzzle : MonoBehaviour
     private void Start()
     {
         MusicManager.DestroyInstance();
+        attempts = 0;
         
         // validate prefab lists
         bottles.ValidatePrefabs(BOTTLE_NAMES.Length, "bottle");
@@ -124,7 +131,7 @@ public class PotionPuzzle : MonoBehaviour
         for (int i = 0; i < correctIngredients.Length; i++)
             text += INGREDIENT_NAMES[correctIngredients[i]] + (i < INGREDIENT_COUNT - 1 ? ", " : "");
         solutionText = text;
-        debugText.text = "(debug only text)\npress P to reveal the solution.";
+        player.ui.debugText.text = "(debug only text)\npress P to reveal the solution.";
         
         // randomize the locations of each
         bottles.InitializePlacement();
@@ -140,19 +147,17 @@ public class PotionPuzzle : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (player.debug && Input.GetKeyDown(KeyCode.P))
         {
             if(solutionRevealed)
                 PuzzleWin();
             else
             {
-                debugText.text = solutionText;
+                player.ui.debugText.text = solutionText;
                 solutionRevealed = true;
             }
         }
         
-        if (Input.GetKeyDown(KeyCode.L))
-            debugText.gameObject.SetActive(!debugText.gameObject.activeSelf);
         if (Input.GetKeyDown(KeyCode.Y))
         {
             GameObject.FindWithTag("Player").GetComponent<PlayerCore>().interaction.DropItem();
@@ -168,7 +173,7 @@ public class PotionPuzzle : MonoBehaviour
         Debug.Log("added ingredient! "+ing.name);
         placedIngredients.Add(ing.Id);
         // statusText.SetStatus(INGREDIENT_NAMES[ing.Id]+" was added to the brew.");
-        statusText.SetStatus("Ingredient was added to the brew.");
+        player.ui.status.SetStatus("Ingredient was added to the brew.");
         ingredients.ReplaceConsumable(ing);
         return true;
     }
@@ -183,11 +188,18 @@ public class PotionPuzzle : MonoBehaviour
         bool correct = bottleType == correctBottle && placedIngredients.Count == INGREDIENT_COUNT;
         for (int i = 0; correct && i < INGREDIENT_COUNT; i++)
             correct = correctIngredients[i] == placedIngredients[i];
-
+        
         if (correct)
             PuzzleWin();
+        else if(attempts < ATTEMPT_NOTIFS.Length)
+            player.ui.status.SetStatus(ATTEMPT_NOTIFS[attempts++]);
         else
-            statusText.SetStatus("That was the wrong potion... you feel sick...");
+        {
+            // lose condition
+            PhotonPacket.GAME_WIN.Value = false;
+            // PhotonPacket.GAME_END.Value = true;
+            ScreenFade.instance.LoadSceneWithFade("EndScene", false);
+        }
         
         placedIngredients.Clear();
         
@@ -196,7 +208,9 @@ public class PotionPuzzle : MonoBehaviour
     
     private void PuzzleWin()
     {
-        statusText.SetStatus("You got the right potion! Yay!");
+        player.ui.status.SetStatus("You got the right potion! Yay!");
         PhotonPacket.POTION_WIN.Value = true;
+        // temporary
+        ScreenFade.instance.LoadSceneWithFade("Maze", Color.white, true);
     }
 }

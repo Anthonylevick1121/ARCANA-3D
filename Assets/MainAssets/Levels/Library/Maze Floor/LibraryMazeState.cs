@@ -59,7 +59,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
     {
         if (!library.debug) return;
         
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             // cycle debug type
             debugType = (DebugType) (((int) debugType + 1) % DebugTypeCount);

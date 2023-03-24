@@ -10,8 +10,8 @@ public class RitualCircle : Interactable
         {
             player.ui.status.SetStatus("Ritual Circle Activated!\nThe arch mage has been saved.");
             PhotonPacket.GAME_WIN.Value = true;
-            PhotonPacket.GAME_END.Value = true;
-            ScreenFade.instance.LoadSceneWithFade("Win Screen", Color.white, false);
+            // PhotonPacket.GAME_END.Value = true;
+            ScreenFade.instance.LoadSceneWithFade("EndScene", Color.white, false);
         }
         else
         {

@@ -30,18 +30,13 @@ public sealed class PhotonPacketType<T>
     public T Get(Hashtable props) => (T) props[key];
     
     public T GetOr(Hashtable props, T defaultValue) => (T) props.GetValueOrDefault(key, defaultValue);
-    
-    // public bool TryGet(Hashtable props, out object value) => props.TryGetValue(key, out value);
-    /*public void IfPacket(Hashtable props, System.Action<T> action)
-    {
-        T val = default;
-        if(props.TryGetValue())
-    }*/
 }
 
 public static class PhotonPacket
 {
     public static readonly PhotonPacketType<bool> START = new ("start");
+    
+    public static readonly PhotonPacketType<bool> PAUSE = new ("pause");
     
     public static readonly PhotonPacketType<int> POTION_SYMBOL = new ("potion symbol");
     public static readonly PhotonPacketType<bool> POTION_WIN = new ("potion win");
@@ -59,7 +54,7 @@ public static class PhotonPacket
     public static readonly PhotonPacketType<int> MAZE_ENEMY = new ("maze enemy");
     
     // final win/loss conditions
-    public static readonly PhotonPacketType<bool> GAME_END = new ("game end");
+    // public static readonly PhotonPacketType<bool> GAME_END = new ("game end");
     // bool is important, denotes win or loss
     public static readonly PhotonPacketType<bool> GAME_WIN = new ("game win");
     

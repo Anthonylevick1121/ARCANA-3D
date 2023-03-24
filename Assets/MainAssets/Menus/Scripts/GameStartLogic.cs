@@ -10,20 +10,26 @@ public class GameStartLogic : BaseMenuLogic
 {
     [SerializeField] private Button startButton;
     
+    // private static readonly string hostWaitMsg = "Waiting for teammate...";
+    // private static readonly string clientWaitMsg = "Waiting for start...";
+    private static readonly string hostWaitMsg = "Waiting...";
+    private static readonly string clientWaitMsg = "Wait For Host";
+    
     // Start is called before the first frame update
     private void Start()
     {
         startButton.interactable = false;
-        startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Waiting...";
+        startButton.GetComponentInChildren<TextMeshProUGUI>().text =
+            PhotonNetwork.IsMasterClient ? hostWaitMsg : clientWaitMsg;
     }
     
     public void StartGameButton()
     {
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2)
         {
-            PhotonPacket.START.Value = true;
             startButton.interactable = false;
-            ScreenFade.instance.LoadSceneWithFade("Maze");
+            PhotonPacket.START.Value = true;
+            ScreenFade.instance.LoadSceneWithFade("Maze", true);
         }
     }
     
@@ -47,12 +53,12 @@ public class GameStartLogic : BaseMenuLogic
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
         if(!PhotonNetwork.IsMasterClient && PhotonPacket.START.WasChanged(deltaProps))
-            ScreenFade.instance.LoadSceneWithFade("Library");
+            ScreenFade.instance.LoadSceneWithFade("Library", true);
     }
     
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         startButton.interactable = false;
-        startButton.GetComponentInChildren<TextMeshProUGUI>().text = "Waiting...";
+        startButton.GetComponentInChildren<TextMeshProUGUI>().text = hostWaitMsg;
     }
 }

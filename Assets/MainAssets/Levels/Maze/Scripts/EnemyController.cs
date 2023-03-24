@@ -21,45 +21,32 @@ public class EnemyController : MonoBehaviour
     public bool debugNavigation;
     public Transform debugTarget;
     
+    private static readonly string[] RESPAWN_NOTIFS =
+    {
+        "You were caught! Seems you're safe... this time...",
+        "Caught again... Something feels off.\nYou should avoid another encounter..."
+    };
+    private int respawnCount = 0;
+    // just to ensure there are no "double caught" bugs
+    private bool caught = false;
+    
     private MazeSectionPos mazeSection = MazeSectionPos.Tutorial; // not the case, but not tracked, and it'll cause an update
-    
-    // just going to refresh every frame for now, doesn't seem to be that bad lol
-    
-    // we don't really want to be setting the destination every frame
-    // that would be really costly on a large map
-    // instead, refresh it more often depending on how close we are to the player.
-    // private readonly float distanceUpdateRatio = 0.9f;
-    // private readonly float maxRefreshInterval = 5f; // seconds
-    // private float nextRefreshInterval;
-    // private float timeSinceRefresh;
-    // private bool valid, firstValid;
-    
-    // private float distCache;
-    
-    // private readonly float gameOverDistance = 5f;
     
     // Start is called before the first frame update
     private void Start()
     {
         navAgent = GetComponent<NavMeshAgent>();
-        // firstValid = false;
-        // RefreshTarget();
         navAgent.speed = baseSpeed;
+        player.ui.pauseMenu.pauseToggled.AddListener(paused => navAgent.isStopped = paused);
     }
     
     public void OnLeverPulled() => navAgent.speed += speedGainPerLever;
     
-    private void RefreshTarget()
-    {
-        navAgent.SetDestination(player.transform.position);
-        // nextRefreshDistance = navAgent.remainingDistance * distanceUpdateRatio;
-        // timeSinceRefresh = 0;
-        // nextRefreshInterval = -1;
-        // valid = false;
-    }
-    
     private void Update()
     {
+        if(player.debug && Input.GetKeyDown(KeyCode.K))
+            RespawnPlayer();
+        
         // calc current maze section
         MazeSectionPos section = MazePuzzle.instance.GetMazeSection(transform.position);
         if (section != mazeSection)
@@ -69,37 +56,6 @@ public class EnemyController : MonoBehaviour
             print("Enemy in section "+Enum.GetName(typeof(MazeSectionPos), section));
         }
         
-        /*timeSinceRefresh += Time.deltaTime;
-        
-        if (navAgent.pathStatus != NavMeshPathStatus.PathComplete)
-        {
-            // valid = true;
-            return;
-        }
-        
-        if (nextRefreshInterval < 0)
-        {
-            // calc
-            distCache = navAgent.remainingDistance;
-            
-            // if (!firstValid && distCache > 0)
-                // firstValid = true;
-            
-            if (navAgent.speed == 0)
-                nextRefreshInterval = maxRefreshInterval;
-            else
-                nextRefreshInterval = distCache / distanceUpdateRatio / navAgent.speed;
-            
-            nextRefreshInterval = Mathf.Clamp(nextRefreshInterval, 0, maxRefreshInterval);
-            
-            print("dist remain: "+distCache);
-            print("time till next check: "+nextRefreshInterval);
-        }
-        
-        debugText.text = "Distance: " + navAgent.remainingDistance + "\ntime until refresh: "+(nextRefreshInterval - timeSinceRefresh);
-        
-        if(timeSinceRefresh >= nextRefreshInterval)
-            RefreshTarget();*/
         navAgent.SetDestination(debugNavigation && debugTarget ? debugTarget.position : player.transform.position);
         
         if (!debugNavigation) return;
@@ -120,9 +76,27 @@ public class EnemyController : MonoBehaviour
     
     public void RespawnPlayer()
     {
-        player.ui.status.SetStatus("You are caught!\naaahhgghhhh...");
-        player.movement.SetPosition(playerRespawnPos.position);
-        navAgent.Warp(enemyRespawnPos.position);
+        if (caught) return;
+        caught = true;
+        // todo sound effect
+        
+        if (respawnCount < RESPAWN_NOTIFS.Length)
+        {
+            ScreenFade.instance.FadeScreen(() =>
+            {
+                player.movement.SetPosition(playerRespawnPos.position);
+                navAgent.Warp(enemyRespawnPos.position);
+                player.ui.status.SetStatus(RESPAWN_NOTIFS[respawnCount++]);
+                caught = false;
+            });
+        }
+        else
+        {
+            // lose condition
+            PhotonPacket.GAME_WIN.Value = false;
+            // PhotonPacket.GAME_END.Value = true;
+            ScreenFade.instance.LoadSceneWithFade("EndScene", false);
+        }
     }
     
     public bool CheckTorchEffectReachable(Vector3 pos)
