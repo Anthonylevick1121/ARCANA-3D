@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731725, g: 0.13414744, b: 0.12107873, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1685,6 +1685,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Screen Fade Overlay
       objectReference: {fileID: 0}
+    - target: {fileID: 1603215752920666897, guid: 6a99b65d09dff514ab7179bb688e5cf9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a99b65d09dff514ab7179bb688e5cf9, type: 3}
 --- !u!1 &2027648041
@@ -2158,7 +2162,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -434}
+  m_AnchoredPosition: {x: 0, y: -404}
   m_SizeDelta: {x: 330.4416, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2128159981
