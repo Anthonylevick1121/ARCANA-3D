@@ -160,5 +160,6 @@ public class CorridorParent : MonoBehaviour
     }
     
     // debug method to flip a lever
-    public void DebugFlipLever(PlayerCore player, HoldableItem item) => lever.BaseInteract(player, item);
+    public void DebugFlipAreaLever(PlayerCore player, HoldableItem item) => lever.BaseInteract(player, item);
+    public bool DebugGetLibLever() => !wallLeverUp;
 }

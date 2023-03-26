@@ -18,6 +18,7 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject[] ritualSymbolParents;
     private Renderer[] ritualSymbols; // cache the renderers
     [SerializeField] private GameObject tutorialDoor;
+    [SerializeField] private GameObject tutorialDoorGroundSymbol;
     
     [SerializeField] public Material dormantSymbolMat;
     [SerializeField] public Material activeSymbolMat;
@@ -40,6 +41,7 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
             Renderer sym = ritualSymbols[i] = ritualSymbolParents[i].GetComponentInChildren<Renderer>();
             sym.material = dormantSymbolMat;
         }
+        tutorialDoorGroundSymbol.SetActive(false);
     }
     
     public static MazeSectionPos GetMazeSection(Vector3 pos)
@@ -83,6 +85,7 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
         {
             // instead, open the door
             tutorialDoor.SetActive(false);
+            tutorialDoorGroundSymbol.SetActive(true);
             return;
         }
         // we've touched one more lever
@@ -114,7 +117,10 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
         }
         
         if (section >= 0)
-            corridorParents[section].DebugFlipLever(player, null);
+            corridorParents[section].DebugFlipAreaLever(player, null);
+        
+        if(Input.GetKeyDown(KeyCode.BackQuote))
+            OnRoomPropertiesUpdate(PhotonPacket.MAZE_LIB_LEVER.Mock(!corridorParents[0].DebugGetLibLever()));
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
