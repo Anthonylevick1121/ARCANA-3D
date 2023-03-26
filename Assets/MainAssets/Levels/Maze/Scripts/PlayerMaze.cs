@@ -16,7 +16,7 @@ public class PlayerMaze : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        int section = (int) MazePuzzle.instance.GetMazeSection(transform.position);
+        int section = (int) MazePuzzle.GetMazeSection(transform.position);
         if (section != mazeSection)
         {
             print("player entered section " + Enum.GetName(typeof(MazeSectionPos), section));

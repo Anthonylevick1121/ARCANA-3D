@@ -48,7 +48,7 @@ public class EnemyController : MonoBehaviour
             RespawnPlayer();
         
         // calc current maze section
-        MazeSectionPos section = MazePuzzle.instance.GetMazeSection(transform.position);
+        MazeSectionPos section = MazePuzzle.GetMazeSection(transform.position);
         if (section != mazeSection)
         {
             mazeSection = section;

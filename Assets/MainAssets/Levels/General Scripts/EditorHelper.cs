@@ -86,15 +86,17 @@ public class EditorHelper : MonoBehaviour
         // Add("Add Components", AddComponents);
         Add("Count Children", obj => print("children: "+obj.transform.childCount));
         Add("Move Children", MoveChildren);
+        Add("Move To", (t, target) => t.SetParent(target));
         Add("Zero Transform", ZeroTransform);
         Add("Zero Transform Relative", ZeroTransformRelative);
         Add("Integer Children Locs", IntegerLocations);
         Add("Clear Overlapping Children", ClearDuplicates);
         Add("Duplicate and Flip Children", t =>
         {
-            DuplicateAndMod(t.GetChild(5));
-            DuplicateAndMod(t.GetChild(6));
+            DuplicateAndMod(t.GetChild(2));
+            DuplicateAndMod(t.GetChild(3));
         });
+        // Add("Sort Walls", CategorizeMaze);
     }
     
     private void ClearDuplicates(Transform t)
@@ -136,9 +138,9 @@ public class EditorHelper : MonoBehaviour
         {
             Transform child = t.GetChild(i);
             Vector3 pos = child.localPosition;
-            pos.x = Mathf.RoundToInt(pos.x);
-            pos.y = Mathf.RoundToInt(pos.y);
-            pos.z = Mathf.RoundToInt(pos.z);
+            pos.x = Mathf.RoundToInt(pos.x / 4) * 4;
+            pos.y = Mathf.RoundToInt(pos.y / 4) * 4;
+            pos.z = Mathf.RoundToInt(pos.z / 4) * 4;
             child.localPosition = pos;
         }
     }
@@ -190,6 +192,34 @@ public class EditorHelper : MonoBehaviour
             moved++;
         }
         print($"moved {moved} children");
+    }
+    
+    private void CategorizeMaze(Transform t)
+    {
+        // t is the parent
+        // walls active is 0, inactive is 1, 9 after are each section
+        for (int i = 0; i < 9; i++)
+        {
+            GameObject active = new ("Walls Active");
+            active.transform.SetParent(t.GetChild(i+2));
+            GameObject inactive = new ("Walls Inactive");
+            inactive.transform.SetParent(t.GetChild(i+2));
+            inactive.SetActive(false);
+        }
+        // parents created, sort
+        
+        void Sort(Transform src, int dst)
+        {
+            while (src.childCount > 0)
+            {
+                Transform wall = src.GetChild(0);
+                int section = (int) MazePuzzle.GetMazeSection(wall.position);
+                wall.SetParent(t.GetChild(section + 2).GetChild(dst));
+            }
+        }
+        // active first, then inactive
+        Sort(t.GetChild(0), 2);
+        Sort(t.GetChild(1), 3);
     }
     
     private void AddComponents(Transform t)

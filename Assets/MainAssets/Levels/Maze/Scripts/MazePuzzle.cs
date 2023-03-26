@@ -13,12 +13,14 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     [SerializeField] public EnemyController enemy;
     
     // ORDERED list of the corridor parent objects, in order of the MazeSectionPos enum
-    [SerializeField] private GameObject[] corridorParents;
-    [SerializeField] private GameObject[] ritualSymbols;
+    [SerializeField] private CorridorParent[] corridorParents;
+    // same, but these are the symbols on the ritual circle
+    [SerializeField] private GameObject[] ritualSymbolParents;
+    private Renderer[] ritualSymbols; // cache the renderers
     [SerializeField] private GameObject tutorialDoor;
     
-    [SerializeField] private Material dormantSymbolMat;
-    [SerializeField] private Material activeSymbolMat;
+    [SerializeField] public Material dormantSymbolMat;
+    [SerializeField] public Material activeSymbolMat;
     
     // internal state, tracking which levers have been touched at least once
     // private bool[] touchedLevers = new bool[9];
@@ -31,16 +33,17 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     private void Start()
     {
         MusicManager.DestroyInstance();
-        
-        foreach (GameObject parent in corridorParents)
-            parent.transform.GetChild(2).GetComponentInChildren<Renderer>().material = dormantSymbolMat;
-        foreach (GameObject sym in ritualSymbols)
-            sym.GetComponentInChildren<Renderer>().material = dormantSymbolMat;
+
+        ritualSymbols = new Renderer[ritualSymbolParents.Length];
+        for (int i = 0; i < ritualSymbols.Length; i++)
+        {
+            Renderer sym = ritualSymbols[i] = ritualSymbolParents[i].GetComponentInChildren<Renderer>();
+            sym.material = dormantSymbolMat;
+        }
     }
     
-    public MazeSectionPos GetMazeSection(Vector3 pos)
+    public static MazeSectionPos GetMazeSection(Vector3 pos)
     {
-        // TODO if -Z, clamp calc into tutorial maze pos and flip X
         if (pos.z < -4)
             return MazeSectionPos.Tutorial;
         
@@ -58,9 +61,11 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     {
         int idx = (int) pos;
         
-        // set lever symbol material
-        corridorParents[idx].transform.GetChild(2).GetComponentInChildren<Renderer>().material = activeSymbolMat;
-        ritualSymbols[idx].GetComponentInChildren<Renderer>().material = activeSymbolMat;
+        // set symbol material
+        ritualSymbols[idx].material = activeSymbolMat;
+        
+        // notify corridor parent for wall/symbol behavior
+        corridorParents[idx].PullAreaLever();
         
         // don't count tutorial levers for the final check
         if (pos == MazeSectionPos.Tutorial)
@@ -78,13 +83,13 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     {
         if (!debug) return;
         
-        int color = -1;
+        int section = -1;
         // debug press-any-lever
         for (KeyCode i = KeyCode.Alpha1; i <= KeyCode.Alpha9; i++)
         {
             if (Input.GetKeyDown(i))
             {
-                color = i - KeyCode.Alpha1;
+                section = i - KeyCode.Alpha1;
                 break;
             }
         }
@@ -92,16 +97,13 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
         {
             if (Input.GetKeyDown(i))
             {
-                color = i - KeyCode.Keypad1;
+                section = i - KeyCode.Keypad1;
                 break;
             }
         }
         
-        if (color >= 0)
-        {
-            corridorParents[color].transform.GetChild(1).GetComponent<MazeSectionLever>()
-                .BaseInteract(player, null);
-        }
+        if (section >= 0)
+            corridorParents[section].DebugFlipLever(player, null);
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
@@ -111,7 +113,8 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
             bool flipped = PhotonPacket.MAZE_LIB_LEVER.Get(deltaProps);
             print("Librarian lever was flipped! "+flipped);
             
-            // todo toggle various different walls
+            foreach (CorridorParent corridor in corridorParents)
+                corridor.SetWallState(flipped);
         }
     }
 }

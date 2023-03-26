@@ -5,11 +5,8 @@ public class MazeSectionLever : Interactable
 {
     public MazeSectionPos mazeSection;
     
-    // private new MeshRenderer renderer;
-    // [SerializeField] private Material startMat, flipMat;
-    
     private Transform parent;
-    private bool flipped;
+    public bool flipped { get; private set; }
     
     public override string GetPrompt(HoldableItem item) => flipped ? "" : "Flip Lever";
     
