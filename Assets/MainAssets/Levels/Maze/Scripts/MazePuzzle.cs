@@ -27,8 +27,8 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     private int leverTouchCount = 0;
     
     private static readonly int MAZE_TILE_DIM = 8;
-    private static readonly int BIG_MAZE_MAX = 464;
-    private static readonly int BIG_MAZE_DIM = BIG_MAZE_MAX / MAZE_TILE_DIM;
+    // private static readonly int BIG_MAZE_MAX = 464;
+    // private static readonly int BIG_MAZE_DIM = BIG_MAZE_MAX / MAZE_TILE_DIM;
     
     private void Start()
     {
@@ -47,8 +47,19 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
         if (pos.z < -4)
             return MazeSectionPos.Tutorial;
         
-        int xPos = Mathf.Clamp(Mathf.FloorToInt(pos.x / MAZE_TILE_DIM / (BIG_MAZE_DIM / 3f)), 0, 2);
-        int zPos = Mathf.Clamp(Mathf.FloorToInt(pos.z / MAZE_TILE_DIM / (BIG_MAZE_DIM / 3f)), 0, 2);
+        // tile positions are:
+        // 0-19 = 0
+        // 20-38 = 1
+        // 39-58 = 2
+        
+        int xTile = Mathf.FloorToInt(pos.x / MAZE_TILE_DIM);
+        int zTile = Mathf.FloorToInt(pos.z / MAZE_TILE_DIM);
+        
+        int xPos = xTile < 20 ? 0 : xTile < 39 ? 1 : 2;
+        int zPos = zTile < 20 ? 0 : zTile < 39 ? 1 : 2;
+        
+        // int xPos = Mathf.Clamp(Mathf.FloorToInt(pos.x / MAZE_TILE_DIM / (BIG_MAZE_DIM / 3f)), 0, 2);
+        // int zPos = Mathf.Clamp(Mathf.FloorToInt(pos.z / MAZE_TILE_DIM / (BIG_MAZE_DIM / 3f)), 0, 2);
         int sectionInt = (xPos * 3 + zPos);
         return (MazeSectionPos) sectionInt;
         // print($"current maze pos: {sectionInt}; xPos {xPos} zPos {zPos}");

@@ -96,7 +96,7 @@ public class EditorHelper : MonoBehaviour
             DuplicateAndMod(t.GetChild(2));
             DuplicateAndMod(t.GetChild(3));
         });
-        // Add("Sort Walls", CategorizeMaze);
+        Add("Sort Walls", CategorizeMaze);
     }
     
     private void ClearDuplicates(Transform t)
@@ -200,11 +200,12 @@ public class EditorHelper : MonoBehaviour
         // walls active is 0, inactive is 1, 9 after are each section
         for (int i = 0; i < 9; i++)
         {
-            GameObject active = new ("Walls Active");
-            active.transform.SetParent(t.GetChild(i+2));
-            GameObject inactive = new ("Walls Inactive");
-            inactive.transform.SetParent(t.GetChild(i+2));
-            inactive.SetActive(false);
+            // GameObject active = new ("Walls Active");
+            // active.transform.SetParent(t.GetChild(i+2));
+            // GameObject inactive = new ("Walls Inactive");
+            // inactive.transform.SetParent(t.GetChild(i+2));
+            // inactive.SetActive(false);
+            t.GetChild(i).GetChild(3).gameObject.SetActive(true);
         }
         // parents created, sort
         
@@ -214,12 +215,12 @@ public class EditorHelper : MonoBehaviour
             {
                 Transform wall = src.GetChild(0);
                 int section = (int) MazePuzzle.GetMazeSection(wall.position);
-                wall.SetParent(t.GetChild(section + 2).GetChild(dst));
+                wall.SetParent(t.GetChild(section).GetChild(dst));
             }
         }
         // active first, then inactive
-        Sort(t.GetChild(0), 2);
-        Sort(t.GetChild(1), 3);
+        // Sort(secondary.GetChild(0), 2);
+        // Sort(secondary.GetChild(1), 3);
     }
     
     private void AddComponents(Transform t)
