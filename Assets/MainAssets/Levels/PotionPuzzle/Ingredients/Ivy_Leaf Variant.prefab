@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1517516592173560440, guid: 464587446a6b1ac4f8c64864139e9f85, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cdef59d634ae00e46aaa46f906f61398, type: 2}
     - target: {fileID: 1517516592175460504, guid: 464587446a6b1ac4f8c64864139e9f85, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -204,7 +208,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d87806ceed0164eaf3f766824bc225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  promptMessage: Pick up Ingredient
   interactionSound: {fileID: 8300000, guid: 377934cf240aea94c9d19d3944541bd5, type: 3}
   dropSound: {fileID: 8300000, guid: 96404a1858d712c4a9d9d681eb524bb0, type: 3}
   Id: 0
