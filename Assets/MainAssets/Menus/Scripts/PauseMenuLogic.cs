@@ -37,6 +37,7 @@ public class PauseMenuLogic : BaseMenuLogic
         if(netUpdate) PhotonPacket.PAUSE.Value = true;
         player.ToggleGameInput(false);
         player.InputActions.Pause.Enable(); // keep this enabled
+        VoicePlayer.instance.PauseVoice(true);
         pauseMenu.SetActive(true);
     }
     
@@ -46,6 +47,7 @@ public class PauseMenuLogic : BaseMenuLogic
         if(netUpdate) PhotonPacket.PAUSE.Value = false;
         pauseMenu.SetActive(false);
         player.ToggleGameInput(true);
+        VoicePlayer.instance.PauseVoice(false);
         pauseToggled.Invoke(false);
     }
     

@@ -8,12 +8,17 @@ public class VoiceLineScript : ScriptableObject
     public struct VoiceLine
     {
         public AudioClip clip;
+        public string subtitle;
     }
     
     [SerializeField] private AudioClip[] voiceLines;
     [SerializeField] private string[] voiceLineScripts;
     
-    public VoiceLine GetLine(VoiceLineId id) => new() {clip = voiceLines[(int) id]};
+    public VoiceLine GetLine(VoiceLineId id) => new()
+    {
+        clip = voiceLines[(int) id],
+        subtitle = voiceLineScripts[(int) id]
+    };
 }
 
 public enum VoiceLineId
