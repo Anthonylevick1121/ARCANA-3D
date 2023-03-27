@@ -10,6 +10,9 @@ public class LibraryPotionState : MonoBehaviourPunCallbacks
     [SerializeField] private Material solutionSymbolMat;
     [SerializeField] private Material notSolutionSymbolMat;
     
+    [SerializeField] private Animator mazeDoorAnimator;
+    private static readonly int doorOpenTrigger = Animator.StringToHash("Open Door");
+    
     private LibraryState library;
     
     // Start is called before the first frame update
@@ -35,9 +38,12 @@ public class LibraryPotionState : MonoBehaviourPunCallbacks
         }
     }
     
-    public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+    public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
-        if(PhotonPacket.POTION_WIN.GetOr(propertiesThatChanged, false))
-            library.statusText.SetStatus("Potion Puzzle Solved!");
+        if (PhotonPacket.POTION_WIN.GetOr(deltaProps, false))
+        {
+            library.statusText.SetStatus("Potion Puzzle Solved! Please, make\nyour way up the stairs...");
+            mazeDoorAnimator.SetTrigger(doorOpenTrigger);
+        }
     }
 }

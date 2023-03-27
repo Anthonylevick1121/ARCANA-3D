@@ -28,7 +28,6 @@ public class GameStartLogic : BaseMenuLogic
         if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 2)
         {
             startButton.interactable = false;
-            PhotonPacket.START.Value = true;
             ScreenFade.instance.LoadSceneWithFade("PotionPuzzle", true);
         }
     }
@@ -52,7 +51,7 @@ public class GameStartLogic : BaseMenuLogic
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
-        if(!PhotonNetwork.IsMasterClient && PhotonPacket.START.WasChanged(deltaProps))
+        if(!PhotonNetwork.IsMasterClient && PhotonPacket.POTION_SYMBOL.WasChanged(deltaProps))
             ScreenFade.instance.LoadSceneWithFade("Library", true);
     }
     
