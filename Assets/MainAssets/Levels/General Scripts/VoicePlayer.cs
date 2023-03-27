@@ -32,8 +32,12 @@ public class VoicePlayer : MonoBehaviour
         {
             if(inst != this) Destroy(gameObject);
             // finding another means we reloaded the main menu scene; don't play voice clips through that
-            if(inst.voicePlayer)
+            if (inst.voicePlayer)
+            {
                 inst.voicePlayer.Stop();
+                inst.subtitle.text = "";
+            }
+            
             return;
         }
         
