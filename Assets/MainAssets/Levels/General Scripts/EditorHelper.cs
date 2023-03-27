@@ -219,8 +219,8 @@ public class EditorHelper : MonoBehaviour
             }
         }
         // active first, then inactive
-        // Sort(secondary.GetChild(0), 2);
-        // Sort(secondary.GetChild(1), 3);
+        Sort(secondary.GetChild(0), 2);
+        Sort(secondary.GetChild(1), 3);
     }
     
     private void AddComponents(Transform t)

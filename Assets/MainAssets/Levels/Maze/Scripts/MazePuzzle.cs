@@ -34,7 +34,7 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
     private void Start()
     {
         MusicManager.DestroyInstance();
-
+        
         ritualSymbols = new Renderer[ritualSymbolParents.Length];
         for (int i = 0; i < ritualSymbols.Length; i++)
         {
