@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class PotionPuzzle : MonoBehaviour
 {
     public static PotionPuzzle instance;
-
+    
     [SerializeField] private PlayerCore player;
     private string solutionText;
     
@@ -18,6 +18,8 @@ public class PotionPuzzle : MonoBehaviour
     [SerializeField] private PotionPuzzleCategory symbols;
     
     [SerializeField] private Material[] symbolColors;
+    
+    [SerializeField] private GameObject hiddenDoorKey;
     
     // STATIC DATA
     // these don't actually affect the game ASIDE from length checks which error if a different number of prefabs are given.
@@ -86,6 +88,7 @@ public class PotionPuzzle : MonoBehaviour
     {
         MusicManager.DestroyInstance();
         attempts = 0;
+        hiddenDoorKey.SetActive(false);
         
         // validate prefab lists
         bottles.ValidatePrefabs(BOTTLE_NAMES.Length, "bottle");
@@ -208,9 +211,19 @@ public class PotionPuzzle : MonoBehaviour
     
     private void PuzzleWin()
     {
-        player.ui.status.SetStatus("You got the right potion! Yay!");
+        player.ui.status.SetStatus("A chill runs through you, and\nyour eyes feel different...");
         PhotonPacket.POTION_WIN.Value = true;
+        
+        // lower the lights!
+        foreach (Light light in GameObject.FindObjectsOfType<Light>(false))
+        {
+            if(!light.CompareTag("PersistentLight"))
+                light.enabled = false;
+        }
+        
+        hiddenDoorKey.SetActive(true);
+        
         // temporary
-        ScreenFade.instance.LoadSceneWithFade("Maze", Color.white, true);
+        //ScreenFade.instance.LoadSceneWithFade("Maze", Color.white, true);
     }
 }

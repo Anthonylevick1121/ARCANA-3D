@@ -29,7 +29,7 @@ public class GameStartLogic : BaseMenuLogic
         {
             startButton.interactable = false;
             PhotonPacket.START.Value = true;
-            ScreenFade.instance.LoadSceneWithFade("Maze", true);
+            ScreenFade.instance.LoadSceneWithFade("PotionPuzzle", true);
         }
     }
     

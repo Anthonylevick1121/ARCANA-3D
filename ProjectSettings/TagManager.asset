@@ -8,6 +8,7 @@ TagManager:
   - Bottle
   - EnemyTorch
   - EnemyPlayerTouch
+  - PersistentLight
   layers:
   - Default
   - TransparentFX

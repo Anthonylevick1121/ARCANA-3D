@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/MainAssets/Levels/Library/Library.unity
     guid: 8898d59f5e7180545936fe05169a9c6e
   - enabled: 1
-    path: Assets/MainAssets/Levels/PotionPuzzle/PotionPuzzleScene.unity
+    path: Assets/MainAssets/Levels/PotionPuzzle/PotionPuzzle.unity
     guid: 24226e73ce98889489f8f92fbd81b71e
   - enabled: 1
     path: Assets/MainAssets/Levels/Maze/Maze.unity
