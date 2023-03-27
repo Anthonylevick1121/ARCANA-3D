@@ -17,6 +17,12 @@ public class PlayerCore : MonoBehaviour
     
     public bool debug = false;
     
+    private static readonly KeyCode[] debugToggleCodes =
+    {
+        KeyCode.D, KeyCode.E, KeyCode.B, KeyCode.U, KeyCode.G
+    };
+    private int debugPresses;
+    
     private void Awake()
     {
         PlayerActionMap input = new ();
@@ -31,6 +37,7 @@ public class PlayerCore : MonoBehaviour
         interaction = GetComponent<PlayerInteraction>();
         
         SetDebug(debug);
+        debugPresses = 0;
     }
     
     private void SetDebug(bool debug)
@@ -43,7 +50,17 @@ public class PlayerCore : MonoBehaviour
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L)) SetDebug(!debug);
+        if (!Input.anyKeyDown) return;
+        if (Input.GetKeyDown(debugToggleCodes[debugPresses]))
+        {
+            debugPresses++;
+            if (debugPresses == debugToggleCodes.Length)
+            {
+                debugPresses = 0;
+                SetDebug(!debug);
+            }
+        }
+        else debugPresses = 0;
     }
     
     public void ToggleGameInput(bool active)
