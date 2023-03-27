@@ -65,7 +65,7 @@ public class EnemyController : MonoBehaviour
         navAgent.SetPath(path);
         
         // check dist for voice line
-        if (playCloseVoice && dist < 20)
+        if (playCloseVoice && dist is >= 0 and < 75)
         {
             playCloseVoice = false;
             VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeEnemyCloseP);
