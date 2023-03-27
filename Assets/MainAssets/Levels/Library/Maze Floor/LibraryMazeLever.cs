@@ -11,6 +11,7 @@ public class LibraryMazeLever : Interactable
     protected override bool Interact(PlayerCore player, HoldableItem heldItem)
     {
         flipped = !flipped;
+        
         print($"interact: lib lever flip to {flipped}");
         
         PhotonPacket.MAZE_LIB_LEVER.Value = flipped;

@@ -1667,6 +1667,7 @@ GameObject:
   - component: {fileID: 7658097682187769508}
   - component: {fileID: 347321290149785553}
   - component: {fileID: 2251762330305020945}
+  - component: {fileID: 471340384406599693}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1846,6 +1847,18 @@ MonoBehaviour:
   debugText: {fileID: 4553853258680665757}
   hudCanvas: {fileID: 5895572551458877065}
   pauseMenu: {fileID: 2378688113007888100}
+--- !u!114 &471340384406599693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7749311485657328806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c11fd6251447f254c82e9a949d2fb2d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8303863300655471872
 GameObject:
   m_ObjectHideFlags: 0

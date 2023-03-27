@@ -34,7 +34,8 @@ public sealed class PhotonPacketType<T>
 
 public static class PhotonPacket
 {
-    public static readonly PhotonPacketType<bool> START = new ("start");
+    // this isn't used for every voice line, just ones that both need to hear, but is triggered by the other.
+    public static readonly PhotonPacketType<int> VOICE = new ("voice");
     
     public static readonly PhotonPacketType<bool> PAUSE = new ("pause");
     

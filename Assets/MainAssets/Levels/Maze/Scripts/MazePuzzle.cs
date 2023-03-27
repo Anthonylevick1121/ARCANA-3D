@@ -91,6 +91,9 @@ public class MazePuzzle : MonoBehaviourPunCallbacks
         // we've touched one more lever
         leverTouchCount++;
         enemy.OnLeverPulled();
+        
+        if(leverTouchCount == 9)
+            VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeLastLeverP);
     }
     
     private void Update()

@@ -124,8 +124,6 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
     {
-        // print("room property updates for "+deltaProps.ToString());
-        
         if (PhotonPacket.MAZE_LEVER.WasChanged(deltaProps))
         {
             int idx = PhotonPacket.MAZE_LEVER.Get(deltaProps);
@@ -169,6 +167,8 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             enemySection = idx;
         }
     }
+
+    private bool playVoice = true;
     
     public void OnFlipLibrarianLever(bool flipped)
     {
@@ -177,5 +177,12 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         // trigger an update of all maps
         for(int i = 0; i < levers.Length; i++)
             UpdateSectionColor(i);
+        
+        // play the demon line on the first flip after the player is out of the tutorial area
+        if (playVoice && playerSection != (int) MazeSectionPos.Tutorial)
+        {
+            playVoice = false;
+            VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeLibLeverL);
+        }
     }
 }

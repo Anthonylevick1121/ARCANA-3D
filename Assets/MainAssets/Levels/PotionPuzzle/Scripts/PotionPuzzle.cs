@@ -146,6 +146,8 @@ public class PotionPuzzle : MonoBehaviour
         {
             obj.GetComponentInChildren<MeshRenderer>().material = symbolColors[symbolColorIds[id]];
         });
+        
+        VoicePlayer.instance.PlayVoiceLine(VoiceLineId.PotionIntroP);
     }
     
     private void Update()
@@ -194,8 +196,12 @@ public class PotionPuzzle : MonoBehaviour
         
         if (correct)
             PuzzleWin();
-        else if(attempts < ATTEMPT_NOTIFS.Length)
+        else if (attempts < ATTEMPT_NOTIFS.Length)
+        {
+            VoicePlayer.instance.PlayVoiceLine(VoiceLineId.PotionFailure1A + attempts);
+            PhotonPacket.VOICE.Value = (int) VoiceLineId.PotionFailure1A + attempts;
             player.ui.status.SetStatus(ATTEMPT_NOTIFS[attempts++]);
+        }
         else
         {
             // lose condition
@@ -213,6 +219,8 @@ public class PotionPuzzle : MonoBehaviour
     {
         player.ui.status.SetStatus("A chill runs through you, and\nyour eyes feel different...");
         PhotonPacket.POTION_WIN.Value = true;
+        
+        VoicePlayer.instance.PlayVoiceLine(VoiceLineId.PotionCompleteP);
         
         // lower the lights!
         foreach (Light light in GameObject.FindObjectsOfType<Light>(false))

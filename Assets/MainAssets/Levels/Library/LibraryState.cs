@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LibraryState : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private PlayerCore player;
+    [SerializeField] public PlayerCore player;
     [SerializeField] private GameObject winScreen, loseScreen;
     
     public bool debug => player.debug;
@@ -32,6 +32,8 @@ public class LibraryState : MonoBehaviourPunCallbacks
             
             if(PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
             (win ? winScreen : loseScreen).SetActive(true);
+            
+            if (win) VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeCompleteA);
         }
     }
 }

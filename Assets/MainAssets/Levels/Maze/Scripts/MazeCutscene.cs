@@ -30,6 +30,9 @@ public class MazeCutscene : MonoBehaviourPunCallbacks
         PhotonPacket.MAZE_PLAYER_ENTER.Value = true;
         // check if lib player made it to their room already
         autoPlayAnim = PhotonPacket.MAZE_LIB_ENTER.Value; // unset values default to false
+        // fun voice line if the player is first
+        if(!autoPlayAnim)
+            VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeFirstP);
     }
     
     private void Update()
@@ -45,6 +48,7 @@ public class MazeCutscene : MonoBehaviourPunCallbacks
     
     private void StartCutscene()
     {
+        VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeIntroP);
         // lock input
         // note that pause state is synced, so it will be *very hard* to trigger cutscene with a menu open
         player.InputActions.Disable();

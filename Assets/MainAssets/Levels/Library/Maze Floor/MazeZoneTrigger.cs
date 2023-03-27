@@ -1,6 +1,8 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
 using UnityEngine;
 
-public class MazeZoneTrigger : MonoBehaviour
+public class MazeZoneTrigger : MonoBehaviourPunCallbacks
 {
     private bool entered;
     
@@ -10,6 +12,16 @@ public class MazeZoneTrigger : MonoBehaviour
         {
             entered = true;
             PhotonPacket.MAZE_LIB_ENTER.Value = true;
+            if(PhotonPacket.MAZE_PLAYER_ENTER.Value)
+                VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeIntroL);
+            else
+                VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeFirstL);
         }
+    }
+    
+    public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
+    {
+        if(entered && PhotonPacket.MAZE_PLAYER_ENTER.WasChanged(deltaProps))
+            VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeIntroL);
     }
 }

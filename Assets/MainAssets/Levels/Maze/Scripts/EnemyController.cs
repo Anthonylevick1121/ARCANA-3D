@@ -30,6 +30,8 @@ public class EnemyController : MonoBehaviour
     // just to ensure there are no "double caught" bugs
     private bool caught = false;
     
+    private bool playCloseVoice;
+    
     private MazeSectionPos mazeSection = MazeSectionPos.Tutorial; // not the case, but not tracked, and it'll cause an update
     
     // Start is called before the first frame update
@@ -38,6 +40,7 @@ public class EnemyController : MonoBehaviour
         navAgent = GetComponent<NavMeshAgent>();
         navAgent.speed = baseSpeed;
         player.ui.pauseMenu.pauseToggled.AddListener(paused => navAgent.isStopped = paused);
+        playCloseVoice = true;
     }
     
     public void OnLeverPulled() => navAgent.speed += speedGainPerLever;
@@ -56,11 +59,21 @@ public class EnemyController : MonoBehaviour
             print("Enemy in section "+Enum.GetName(typeof(MazeSectionPos), section));
         }
         
-        navAgent.SetDestination(debugNavigation && debugTarget ? debugTarget.position : player.transform.position);
+        Vector3 dest = debugNavigation && debugTarget ? debugTarget.position : player.transform.position;
+        
+        (NavMeshPath path, float dist) = GetDistance(dest);
+        navAgent.SetPath(path);
+        
+        // check dist for voice line
+        if (playCloseVoice && dist < 20)
+        {
+            playCloseVoice = false;
+            VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeEnemyCloseP);
+        }
         
         if (!debugNavigation) return;
-        NavMeshPath path = new ();
-        navAgent.CalculatePath(debugTarget ? debugTarget.position : player.transform.position, path);
+        // NavMeshPath path = new ();
+        // navAgent.CalculatePath(debugTarget ? debugTarget.position : player.transform.position, path);
         Vector3 last = Vector3.zero;
         foreach (Vector3 pos in path.corners)
         {
@@ -78,7 +91,8 @@ public class EnemyController : MonoBehaviour
     {
         if (caught) return;
         caught = true;
-        // todo sound effect
+        
+        VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeFailure1P + respawnCount);
         
         if (respawnCount < RESPAWN_NOTIFS.Length)
         {
@@ -94,22 +108,29 @@ public class EnemyController : MonoBehaviour
         {
             // lose condition
             PhotonPacket.GAME_WIN.Value = false;
+            PhotonPacket.VOICE.Value = (int) VoiceLineId.MazeFailure3A;
             // PhotonPacket.GAME_END.Value = true;
             ScreenFade.instance.LoadSceneWithFade("EndScene", false);
         }
     }
     
-    public bool CheckTorchEffectReachable(Vector3 pos)
+    private (NavMeshPath, float) GetDistance(Vector3 pos)
     {
         // use the nav mesh to our advantage
         NavMeshPath path = new ();
         navAgent.CalculatePath(pos, path);
         if (path.status != NavMeshPathStatus.PathComplete)
-            return false; // only reachable tiles should be affected
+            return (path, -1); // only reachable tiles should be affected
         float distance = 0;
         for (int i = 1; i < path.corners.Length; i++)
             distance += Vector3.Distance(path.corners[i], path.corners[i - 1]);
         
-        return distance <= torchEffectDistMultiplier * Mathf.Max(minTorchEffectSpeedFactor, navAgent.speed);
+        return (path, distance);
+    }
+    
+    public bool CheckTorchEffectReachable(Vector3 pos)
+    {
+        (_, float dist) = GetDistance(pos);
+        return dist >= 0 && dist <= torchEffectDistMultiplier * Mathf.Max(minTorchEffectSpeedFactor, navAgent.speed);
     }
 }

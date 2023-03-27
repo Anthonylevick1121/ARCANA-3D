@@ -36,6 +36,8 @@ public class LibraryPotionState : MonoBehaviourPunCallbacks
             if (i == solutionSymbol)
                 Instantiate(solutionEffect, symbols[i].transform);
         }
+        
+        VoicePlayer.instance.PlayVoiceLine(VoiceLineId.PotionIntroL);
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
@@ -44,6 +46,7 @@ public class LibraryPotionState : MonoBehaviourPunCallbacks
         {
             library.statusText.SetStatus("Potion Puzzle Solved! Please, make\nyour way up the stairs...");
             mazeDoorAnimator.SetTrigger(doorOpenTrigger);
+            VoicePlayer.instance.PlayVoiceLine(VoiceLineId.PotionCompleteL);
         }
     }
 }
