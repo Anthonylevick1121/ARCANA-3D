@@ -50,12 +50,9 @@ public class VoicePlayer : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        subtitle.text = "testing";
+        subtitle.text = "";
         if (cachedClip >= 0)
-        {
-            print("start");
             PlayVoiceLine((VoiceLineId) cachedClip);
-        }
     }
     
     private void Update()

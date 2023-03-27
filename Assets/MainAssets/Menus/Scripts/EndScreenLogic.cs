@@ -13,6 +13,10 @@ public class EndScreenLogic : BaseMenuLogic
         if(PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
         winScreen.SetActive(win);
         loseScreen.SetActive(!win);
+    }
+    
+    private void Update()
+    {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }

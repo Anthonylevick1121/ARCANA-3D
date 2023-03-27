@@ -819,7 +819,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "WASD\nSpace\nShift\nControl\t\nE\nQ\nP"
+  m_text: "WASD\nSpace\nShift\nControl\t\nE\nQ\nTab"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dd67554e9792a624285da13123aa0263, type: 2}
   m_sharedMaterial: {fileID: -3886349781132074865, guid: dd67554e9792a624285da13123aa0263, type: 2}

@@ -19,6 +19,15 @@ public class LibraryState : MonoBehaviourPunCallbacks
         debugText.gameObject.SetActive(debug);
     }
     
+    private void Update()
+    {
+        if (!player.debug) return;
+        if(Input.GetKeyDown(KeyCode.K))
+            OnRoomPropertiesUpdate(PhotonPacket.GAME_WIN.Mock(true));
+        if(Input.GetKeyDown(KeyCode.L))
+            OnRoomPropertiesUpdate(PhotonPacket.GAME_WIN.Mock(false));
+    }
+    
     public void EndCredits() => ScreenFade.instance.LoadSceneWithFade("CreditsPage", false);
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)

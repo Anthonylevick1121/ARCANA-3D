@@ -1,6 +1,8 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(LibraryState))]
 public class LibraryPotionState : MonoBehaviourPunCallbacks
@@ -38,6 +40,12 @@ public class LibraryPotionState : MonoBehaviourPunCallbacks
         }
         
         VoicePlayer.instance.PlayVoiceLine(VoiceLineId.PotionIntroL);
+    }
+    
+    private void Update()
+    {
+        if(library.debug && Input.GetKeyDown(KeyCode.P))
+            OnRoomPropertiesUpdate(PhotonPacket.POTION_WIN.Mock(true));
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
