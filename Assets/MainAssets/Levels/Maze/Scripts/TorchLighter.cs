@@ -4,14 +4,18 @@ using UnityEngine.AI;
 public class TorchLighter : MonoBehaviour
 {
     [SerializeField] private new Light light;
-
+    
     private Vector3 tilePos;
     
     private static readonly float lightCheckInterval = 0.5f;
     private float curStayTime;
     
+    private float startIntensity;
+    
     private void Start()
     {
+        startIntensity = light.intensity;
+        
         Transform transform = this.transform.parent;
         Vector3 pos = transform.localPosition;
         pos.y = 1; // right above ground
@@ -38,32 +42,29 @@ public class TorchLighter : MonoBehaviour
     {
         if (!other.CompareTag("EnemyTorch")) return;
         
+        curStayTime = 0;
         if (MazePuzzle.instance.enemy.CheckTorchEffectReachable(tilePos))
-            light.enabled = false;
-        else
-            curStayTime = 0;
+            light.intensity = startIntensity * 0.1f;
     }
     
     private void OnTriggerStay(Collider other)
     {
-        // no stay behavior for doused lights.
-        if (!other.CompareTag("EnemyTorch") || !light.enabled) return;
+        if (!other.CompareTag("EnemyTorch")) return;
         
         // every half second, try again
         curStayTime += Time.fixedDeltaTime;
         if (curStayTime >= lightCheckInterval)
         {
-            if(MazePuzzle.instance.enemy.CheckTorchEffectReachable(tilePos))
-                light.enabled = false;
-            else
-                curStayTime -= lightCheckInterval;
+            curStayTime -= lightCheckInterval;
+            bool inRange = MazePuzzle.instance.enemy.CheckTorchEffectReachable(tilePos);
+            light.intensity = startIntensity * (inRange ? 0.1f : 1);
         }
     }
     
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("EnemyTorch"))
-            light.enabled = true;
+            light.intensity = startIntensity;
     }
     
     private bool CheckReachableRaycast(Vector3 startPos)
