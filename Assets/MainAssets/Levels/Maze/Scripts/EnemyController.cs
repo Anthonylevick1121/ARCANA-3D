@@ -60,8 +60,12 @@ public class EnemyController : MonoBehaviour
         }
         
         Vector3 dest = debugNavigation && debugTarget ? debugTarget.position : player.transform.position;
+        // round to tile
+        dest.x = Mathf.Round(dest.x / 8) * 8;
+        dest.y = 2;
+        dest.z = Mathf.Round(dest.z / 8) * 8;
         
-        (NavMeshPath path, float dist) = GetDistance(dest);
+        (NavMeshPath path, float dist) = GetDistance(dest, false);
         navAgent.SetPath(path);
         
         // check dist for voice line
@@ -114,23 +118,26 @@ public class EnemyController : MonoBehaviour
         }
     }
     
-    private (NavMeshPath, float) GetDistance(Vector3 pos)
+    private (NavMeshPath, float) GetDistance(Vector3 pos, bool acceptPartial)
     {
         // use the nav mesh to our advantage
         NavMeshPath path = new ();
         navAgent.CalculatePath(pos, path);
-        if (path.status != NavMeshPathStatus.PathComplete)
+        if (path.status == NavMeshPathStatus.PathInvalid || !acceptPartial && path.status == NavMeshPathStatus.PathPartial)
             return (path, -1); // only reachable tiles should be affected
         float distance = 0;
         for (int i = 1; i < path.corners.Length; i++)
             distance += Vector3.Distance(path.corners[i], path.corners[i - 1]);
+        
+        // add remaining dist
+        distance += Vector3.Distance(path.corners[^1], pos);
         
         return (path, distance);
     }
     
     public bool CheckTorchEffectReachable(Vector3 pos)
     {
-        (_, float dist) = GetDistance(pos);
+        (_, float dist) = GetDistance(pos, true);
         return dist >= 0 && dist <= torchEffectDistMultiplier * Mathf.Max(minTorchEffectSpeedFactor, navAgent.speed);
     }
 }
