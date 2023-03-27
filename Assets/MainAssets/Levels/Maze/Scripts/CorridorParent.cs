@@ -62,12 +62,16 @@ public class CorridorParent : MonoBehaviour
     
     public void SetWallState(bool flipped)
     {
-        // all states are ignored if area lever has been pulled.
-        if (areaLeverDown) return;
-        
         // flipped refers to the position of the librarian lever.
         // however, in this class, it's easier to use true = up, false = down, so we switch
         bool leverUp = !flipped;
+        
+        // all states are ignored if area lever has been pulled.
+        if (areaLeverDown)
+        {
+            wallLeverUp = leverUp;
+            return;
+        }
         
         // technically, we shouldn't need to check if we're already in the state being asked for, but we probably should
         // if we're already at / going toward the target state, ignore the call
