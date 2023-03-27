@@ -10,9 +10,10 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
 {
     // each of these are expected to have children ordered by the MazeSectionPos enum.
     [SerializeField] private Renderer[] mapSections;
-    [SerializeField] private Material[] mapStateStart;
-    [SerializeField] private Material[] mapStateAlt;
-    [SerializeField] private Material[] mapStateDone;
+    [SerializeField] private Material mapBaseMaterial;
+    [SerializeField] private Texture2D[] mapStateStart;
+    [SerializeField] private Texture2D[] mapStateAlt;
+    [SerializeField] private Texture2D[] mapStateDone;
     // [SerializeField] private Color completedMapColor;
     [SerializeField] private Color playerMapColor; // player in section
     [SerializeField] private Color inactiveMapColor;
@@ -49,8 +50,12 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
             // color the cover symbols, those will be seen first
             mapSymbols[i] = mapCovers[i].transform.GetChild(0).GetComponentInChildren<Renderer>();
             mapSymbols[i].material = mapSymbolBaseMat;
+            // create a runtime material for this section based on the base
+            mapSections[i].material = new Material(mapBaseMaterial);
+            mapSections[i].sharedMaterial.name = Enum.GetName(typeof(MazeSectionPos), i) + " Map Material";
+            
             // ensure each section is displaying proper initial state
-            UpdateSectionColor(i);
+            UpdateSectionTexture(i);
         }
         library.debugText.text = "Debug mode: " + Enum.GetName(typeof(DebugType), debugType);
     }
@@ -98,7 +103,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         OnRoomPropertiesUpdate(packet.Mock(section));
     }
     
-    private void UpdateSectionColor(int section)
+    private void UpdateSectionTexture(int section)
     {
         if (section < 0) return;
         
@@ -108,18 +113,22 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         // - librarian + player lever state - picks material
         
         // since it changes the material, first pick material
-        Material targetMat = mapStateStart.Length == 0 ? mapSections[section].material : // small debug addition
+        Texture2D targetTexture = mapStateStart.Length == 0 ? (Texture2D) mapSections[section].material.mainTexture : // small debug addition
             (levers[section] ? mapStateDone : librarianLever ? mapStateAlt : mapStateStart)[section];
         
+        Material mat = mapSections[section].sharedMaterial;
+        // set texture
+        mat.mainTexture = targetTexture;
+        
         // set emission based on enemy
-        if(enemySection == section) targetMat.EnableKeyword("_EMISSION");
-        else targetMat.DisableKeyword("_EMISSION");
+        if(enemySection == section) mat.EnableKeyword("_EMISSION");
+        else mat.DisableKeyword("_EMISSION");
         
         // set color based on player
-        targetMat.color = playerSection == section ? playerMapColor : inactiveMapColor;
+        mat.color = playerSection == section ? playerMapColor : inactiveMapColor;
         
         // assign material
-        mapSections[section].material = targetMat;
+        // mapSections[section].material = targetMat;
     }
     
     public override void OnRoomPropertiesUpdate(Hashtable deltaProps)
@@ -133,7 +142,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
                 library.statusText.SetStatus("Lever Flipped!\nA door opens... guide well.");
             else
                 library.statusText.SetStatus("Lever Flipped!\nMore magic flows to the ritual circle...");
-            UpdateSectionColor(idx);
+            UpdateSectionTexture(idx);
         }
         
         if (PhotonPacket.MAZE_PLAYER.WasChanged(deltaProps))
@@ -176,7 +185,7 @@ public class LibraryMazeState : MonoBehaviourPunCallbacks
         librarianLever = flipped;
         // trigger an update of all maps
         for(int i = 0; i < levers.Length; i++)
-            UpdateSectionColor(i);
+            UpdateSectionTexture(i);
         
         // play the demon line on the first flip after the player is out of the tutorial area
         if (playVoice && playerSection != (int) MazeSectionPos.Tutorial)
