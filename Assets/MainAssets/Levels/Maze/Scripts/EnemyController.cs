@@ -100,7 +100,7 @@ public class EnemyController : MonoBehaviour
         
         if (respawnCount < RESPAWN_NOTIFS.Length)
         {
-            ScreenFade.instance.FadeScreen(() =>
+            ScreenFade.instance.FadeScreen(CanvasLayer.MoveTransition, () =>
             {
                 player.movement.SetPosition(playerRespawnPos.position);
                 navAgent.Warp(enemyRespawnPos.position);
@@ -114,7 +114,7 @@ public class EnemyController : MonoBehaviour
             PhotonPacket.GAME_WIN.Value = false;
             PhotonPacket.VOICE.Value = (int) VoiceLineId.MazeFailure3A;
             // PhotonPacket.GAME_END.Value = true;
-            ScreenFade.instance.LoadSceneWithFade("EndScene", false);
+            ScreenFade.instance.LoadSceneWithFade("EndScene", false, CanvasLayer.EndTransition);
         }
     }
     

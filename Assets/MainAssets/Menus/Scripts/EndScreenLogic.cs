@@ -11,6 +11,7 @@ public class EndScreenLogic : BaseMenuLogic
         if (!PhotonNetwork.IsConnected) return; // is debug
         bool win = PhotonPacket.GAME_WIN.Value;
         if(PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+        winScreen.GetComponentInParent<Canvas>().sortingOrder = (int) CanvasLayer.EndScreen;
         winScreen.SetActive(win);
         loseScreen.SetActive(!win);
     }

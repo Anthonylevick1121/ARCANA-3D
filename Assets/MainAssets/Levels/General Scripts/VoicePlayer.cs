@@ -31,6 +31,9 @@ public class VoicePlayer : MonoBehaviour
         if (inst != null)
         {
             if(inst != this) Destroy(gameObject);
+            // finding another means we reloaded the main menu scene; don't play voice clips through that
+            if(inst.voicePlayer)
+                inst.voicePlayer.Stop();
             return;
         }
         
@@ -51,6 +54,7 @@ public class VoicePlayer : MonoBehaviour
     private void Start()
     {
         subtitle.text = "";
+        subtitle.canvas.sortingOrder = (int) CanvasLayer.Subtitles;
         if (cachedClip >= 0)
             PlayVoiceLine((VoiceLineId) cachedClip);
     }
@@ -90,7 +94,7 @@ public class VoicePlayer : MonoBehaviour
                 voicePlayer.volume = line.volume;
                 voicePlayer.PlayDelayed(0.75f); // delay to account for fade time, etc
             }
-
+            
             captions = line.subtitle;
             subtitleTimer = (voicePlayer.clip ? line.clip.length : captions.Split(" ").Length / 3f) + 2;
         }

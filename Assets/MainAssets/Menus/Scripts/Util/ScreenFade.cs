@@ -72,14 +72,16 @@ public class ScreenFade : MonoBehaviour
         // funni loading text ... animation
     }
     
-    public void FadeScreen(Action onFade, Color initialFadeColor)
+    public void FadeScreen(CanvasLayer fadeLayer, Action onFade, Color initialFadeColor)
     {
         backCover.color = initialFadeColor;
-        FadeScreen(onFade, true);
+        FadeScreen(fadeLayer, onFade, true);
     }
-    public void FadeScreen(Action onFade) => FadeScreen(onFade, false);
-    private void FadeScreen(Action onFade, bool fadeBack, bool showLoadingText = false, bool fadeInAfter = true)
+    public void FadeScreen(CanvasLayer fadeLayer, Action onFade) => FadeScreen(fadeLayer, onFade, false);
+    private void FadeScreen(CanvasLayer fadeLayer, Action onFade,
+        bool fadeBack, bool showLoadingText = false, bool fadeInAfter = true)
     {
+        backCover.canvas.sortingOrder = (int) fadeLayer;
         this.fadeInAfter = fadeInAfter;
         onFadeAction = onFade;
         loadingText.gameObject.SetActive(showLoadingText);
@@ -113,15 +115,41 @@ public class ScreenFade : MonoBehaviour
         animator.SetBool(doFadeParam, false);
     }
     
-    private void LoadSceneWithFade(string scene, bool fadeBack, bool showLoadingText)
+    private void LoadSceneWithFade(string scene, bool fadeBack, bool showLoadingText, CanvasLayer transitionLayer)
     {
-        FadeScreen(() => StartCoroutine(LoadScene(scene)), fadeBack, showLoadingText, false);
+        FadeScreen(transitionLayer, () => StartCoroutine(LoadScene(scene)), fadeBack, showLoadingText, false);
     }
-    public void LoadSceneWithFade(string scene, bool showLoadingText) =>
-        LoadSceneWithFade(scene, false, showLoadingText);
-    public void LoadSceneWithFade(string scene, Color initialFadeColor, bool showLoadingText)
+    
+    public void LoadSceneWithFade(string scene, bool showLoadingText,
+        CanvasLayer transitionLayer = CanvasLayer.MenuTransition)
+    {
+        LoadSceneWithFade(scene, false, showLoadingText, transitionLayer);
+    }
+
+    public void LoadSceneWithFade(string scene, Color initialFadeColor, bool showLoadingText,
+        CanvasLayer transitionLayer = CanvasLayer.MenuTransition)
     {
         backCover.color = initialFadeColor;
-        LoadSceneWithFade(scene, true, showLoadingText);
+        LoadSceneWithFade(scene, true, showLoadingText, transitionLayer);
     }
+}
+
+public enum CanvasLayer
+{
+    // available layers: hud, subtitles, pause screen, win/lose screen, main menus, screen fade
+    
+    // hud always bottom
+    // end screen below subtitles and end transition
+    // pause screen above subtitles and hud, below main menu transition
+    // subtitles above all except main menus and main menu transitions
+    // main menus above all except main menu transitions
+    
+    // other level fades: player caught, between-level load
+    // - caught uses MoveTransition
+    // - between-level will count as a menu transition
+    
+    // main menus will never be present with any of the rest of these, aside from the transition
+    // exception is credits, with the subtitles, so we add that instead
+    
+    Hud, MoveTransition, EndScreen, EndTransition, Subtitles, PauseScreen, CreditsScreen, MenuTransition
 }

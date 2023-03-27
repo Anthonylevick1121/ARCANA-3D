@@ -17,6 +17,7 @@ public class LibraryState : MonoBehaviourPunCallbacks
     {
         MusicManager.DestroyInstance();
         debugText.gameObject.SetActive(debug);
+        winScreen.GetComponentInParent<Canvas>().sortingOrder = (int) CanvasLayer.EndScreen;
     }
     
     private void Update()

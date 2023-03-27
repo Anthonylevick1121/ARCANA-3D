@@ -12,7 +12,7 @@ public class RitualCircle : Interactable
             PhotonPacket.GAME_WIN.Value = true;
             VoicePlayer.instance.PlayVoiceLine(VoiceLineId.MazeCompleteA);
             // PhotonPacket.GAME_END.Value = true;
-            ScreenFade.instance.LoadSceneWithFade("EndScene", Color.white, false);
+            ScreenFade.instance.LoadSceneWithFade("EndScene", Color.white, false, CanvasLayer.EndTransition);
         }
         else
         {

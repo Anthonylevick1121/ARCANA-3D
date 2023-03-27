@@ -207,7 +207,7 @@ public class PotionPuzzle : MonoBehaviour
             // lose condition
             PhotonPacket.GAME_WIN.Value = false;
             // PhotonPacket.GAME_END.Value = true;
-            ScreenFade.instance.LoadSceneWithFade("EndScene", false);
+            ScreenFade.instance.LoadSceneWithFade("EndScene", false, CanvasLayer.EndTransition);
         }
         
         placedIngredients.Clear();

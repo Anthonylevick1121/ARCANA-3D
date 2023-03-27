@@ -17,10 +17,9 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] public Canvas hudCanvas;
     [SerializeField] public PauseMenuLogic pauseMenu;
     
-    // Update is called once per frame
-    public void UpdateText(string promptMessage)
+    private void Start()
     {
-        promptText.text = promptMessage;
+        hudCanvas.sortingOrder = (int) CanvasLayer.Hud;
+        pauseMenu.GetComponentInParent<Canvas>().sortingOrder = (int) CanvasLayer.PauseScreen;
     }
-    
 }
