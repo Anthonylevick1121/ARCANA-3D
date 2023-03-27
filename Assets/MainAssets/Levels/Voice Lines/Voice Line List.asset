@@ -12,23 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b37197396bc7c4499bdcd69d30522e8, type: 3}
   m_Name: Voice Line List
   m_EditorClassIdentifier: 
+  wizardVolume: 0.8
+  demonVolume: 0.25
   voiceLines:
   - {fileID: 8300000, guid: 13699c006696d284c8aed90cd9ad273d, type: 3}
   - {fileID: 8300000, guid: 669e75ec63deea241aaf536941703eed, type: 3}
   - {fileID: 8300000, guid: 273a629a322f71740bd18da895a36b21, type: 3}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: e9adf7a60a1f6f24695715ea268f9666, type: 3}
   - {fileID: 8300000, guid: 0404b1d5b86bcef45838cc2235e5d311, type: 3}
   - {fileID: 8300000, guid: d1798c237e8dc6444aff6f03f6537bf3, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: a7abef026fd3e5b4d8d16b033cacee71, type: 3}
+  - {fileID: 8300000, guid: afffc1f174612b045a2aba21c7cf1846, type: 3}
   - {fileID: 8300000, guid: fd03dbca88e4b414d93048f06da756c9, type: 3}
   - {fileID: 8300000, guid: c0878d0045ab7424e8405b4e509365e9, type: 3}
   - {fileID: 8300000, guid: 7e6e7d9653a964a49be2c085ea574f58, type: 3}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: da901e1d97efb884d8560f83445fe65b, type: 3}
   - {fileID: 8300000, guid: fdd20f1021cdb814699aa1e5d43c5d09, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: af7664500a5f48f47a215f4d8032df21, type: 3}
+  - {fileID: 8300000, guid: 3405945d24554e94fa57b6018a76c3fb, type: 3}
+  - {fileID: 8300000, guid: f07987c26e9b22347b179a1d74c3516f, type: 3}
   - {fileID: 0}
   voiceLineScripts:
   - Ah! Apprentice, We don't have much time! You need to help my assistant in a couple
@@ -70,4 +72,11 @@ MonoBehaviour:
   - Do you think you can outrun the warden of those halls? Make it to the center
     before he gets to you?
   - If you trap your buddy, I'll give you untold riches.
-  - Welcome to the maze library. pls guide. thank.
+  - Welcome to the upper study. Herein lies an overview of my lower lab. You'll need
+    to help my other apprentice with activating the ritual circle for my safe return.
+    There are a number of security measures I've put in, but we don't have time to
+    go into detail. Guide your fellow apprentice through my lab and activate the
+    sigil in each area. I've cast some magic to let you know roughly where your friend
+    and... another entity of mine is, but that's the best I can do. You'll have to
+    cooperate if you want to guide your friend well. Good luck. And uh... please
+    hurry. This demon smells terrible. And he's probably going to kill me. That too.

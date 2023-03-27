@@ -8,15 +8,19 @@ public class VoiceLineScript : ScriptableObject
     public struct VoiceLine
     {
         public AudioClip clip;
+        public float volume;
         public string subtitle;
     }
     
+    [SerializeField] public float wizardVolume = 1;
+    [SerializeField] public float demonVolume = 1;
     [SerializeField] private AudioClip[] voiceLines;
     [SerializeField] private string[] voiceLineScripts;
     
     public VoiceLine GetLine(VoiceLineId id) => new()
     {
         clip = voiceLines[(int) id],
+        volume = voiceLines[(int) id].name.Contains("Wizard") ? wizardVolume : demonVolume,
         subtitle = voiceLineScripts[(int) id]
     };
 }

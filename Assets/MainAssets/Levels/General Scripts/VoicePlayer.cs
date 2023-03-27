@@ -85,8 +85,12 @@ public class VoicePlayer : MonoBehaviour
             voicePlayer.Stop();
             VoiceLineScript.VoiceLine line = voiceScript.GetLine(id);
             voicePlayer.clip = line.clip;
-            if(voicePlayer.clip)
+            if (voicePlayer.clip)
+            {
+                voicePlayer.volume = line.volume;
                 voicePlayer.PlayDelayed(0.75f); // delay to account for fade time, etc
+            }
+
             captions = line.subtitle;
             subtitleTimer = (voicePlayer.clip ? line.clip.length : captions.Split(" ").Length / 3f) + 2;
         }
