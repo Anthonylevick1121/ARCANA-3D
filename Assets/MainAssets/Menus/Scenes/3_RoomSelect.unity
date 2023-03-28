@@ -1055,6 +1055,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   join: {fileID: 1889576601}
   create: {fileID: 716131388}
+  joinBtn: {fileID: 1853087059}
+  createBtn: {fileID: 1014259566}
 --- !u!4 &1206906884
 Transform:
   m_ObjectHideFlags: 0
