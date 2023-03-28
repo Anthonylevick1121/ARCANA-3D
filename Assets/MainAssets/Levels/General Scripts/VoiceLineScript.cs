@@ -20,7 +20,7 @@ public class VoiceLineScript : ScriptableObject
     public VoiceLine GetLine(VoiceLineId id) => new()
     {
         clip = voiceLines[(int) id],
-        volume = voiceLines[(int) id].name.Contains("Wizard") ? wizardVolume : demonVolume,
+        volume = voiceLines[(int) id]?.name.Contains("Wizard") ?? true ? wizardVolume : demonVolume,
         subtitle = voiceLineScripts[(int) id]
     };
 }
