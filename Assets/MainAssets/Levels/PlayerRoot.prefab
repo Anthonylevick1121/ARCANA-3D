@@ -169,7 +169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1887411083911245990
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1099,7 +1099,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "WASD\nSpace\nShift\nControl\t\nE\nQ\nP"
+  m_text: "WASD\nSpace\nShift\nControl\t\nE\nQ\nTab"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dd67554e9792a624285da13123aa0263, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 5dd750490b60f4971837c6aff86a4241, type: 2}

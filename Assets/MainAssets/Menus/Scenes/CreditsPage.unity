@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731725, g: 0.13414744, b: 0.12107873, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731704, g: 0.13414727, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -694,7 +694,7 @@ GameObject:
   - component: {fileID: 736024959}
   - component: {fileID: 736024958}
   m_Layer: 5
-  m_Name: Credits text - right
+  m_Name: Credits text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -740,8 +740,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Assets:\nhttps://assetstore.unity.com/packages/3d/characters/creatures/ghost-casual-fantasy-206329\nhttps://assetstore.unity.com/packages/2d/textures-materials/sky/toon-skyboxes-93124\nFont:\nSounds:
-    \nhttps://www.youtube.com/watch?v=sWb3ebgSEfI\nhttps://www.youtube.com/watch?v=nzyJWfm29aw\nhttps://www.youtube.com/watch?v=UVqPDF0VFCE&t=12s\nhttps://www.youtube.com/watch?v=P1ycKSgJECw\nhttps://www.youtube.com/watch?v=EkCDcHRzYIM\nImages:"
+  m_text: "Dungeon: https://assetstore.unity.com/packages/3d/environments/dungeons/ultimate-low-poly-dungeon-143535\nPotions:
+    https://assetstore.unity.com/packages/3d/props/potions-115115\nGhost: https://assetstore.unity.com/packages/3d/characters/creatures/ghost-casual-fantasy-206329\nSkybox:
+    https://assetstore.unity.com/packages/2d/textures-materials/sky/toon-skyboxes-93124\nFont:
+    https://www.dafont.com/enchanted-land.font?text=Paused&psize=l&back=theme\nSounds:
+    \nFootsteps: https://www.youtube.com/watch?v=sWb3ebgSEfI\nItem pick up: https://www.youtube.com/watch?v=nzyJWfm29aw\nCauldron:
+    https://www.youtube.com/watch?v=UVqPDF0VFCE&t=12s\nGlass bottle: https://www.youtube.com/watch?v=P1ycKSgJECw\nItem
+    dropped: https://www.youtube.com/watch?v=EkCDcHRzYIM"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -768,11 +773,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.1
+  m_fontSize: 17.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 15
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
@@ -804,7 +809,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 41.118256, y: 0, z: 34.40905, w: -0.29211065}
+  m_margin: {x: -0.55874634, y: 0, z: 0.70652515, w: -0.29211065}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -833,7 +838,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &784972391
 RectTransform:
   m_ObjectHideFlags: 0
@@ -844,7 +849,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1626496596}
   - {fileID: 2083082213}
@@ -1092,7 +1097,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &884724988
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1103,7 +1108,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 661170267}
   - {fileID: 419374525}
@@ -2185,7 +2190,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.75
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
