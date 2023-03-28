@@ -173,6 +173,16 @@ public class PotionPuzzle : MonoBehaviour
         }
     }
     
+    public bool HasPotionBrewing() => placedIngredients.Count > 0;
+    
+    public bool ClearPotion()
+    {
+        if (!HasPotionBrewing()) return false;
+        placedIngredients.Clear();
+        player.ui.status.SetStatus("The mixture boils then calms,\ngiving you a fresh slate.");
+        return true;
+    }
+    
     public bool AddIngredient(PotionIngredient ing)
     {
         Debug.Log("added ingredient! "+ing.name);
